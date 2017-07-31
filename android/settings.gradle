@@ -1,0 +1,3 @@
+rootProject.name = 'RainbarrelMobile'
+
+include ':app'
