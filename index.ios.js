@@ -1,4 +1,3 @@
-import { AppRegistry } from 'react-native';
 import App from './src/App';
 
-AppRegistry.registerComponent('RainbarrelMobile', () => App);
+const app = new App();

@@ -1,11 +1,21 @@
 import React from 'react';
-import { createStore, applyMiddleware } from 'redux';
-import ReduxThunk from 'redux-thunk';
+import { Navigation } from 'react-native-navigation';
 import { Provider } from 'react-redux';
 import Firebase from 'firebase';
-import reducers from './reducers';
+
+import configureStore from './store';
+import registerScreens from './screens';
+
+
+const store = configureStore();
+registerScreens(store, Provider);
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.startApp();
+  }
+
   componentWillMount() {
     const config = {
       apiKey: 'AIzaSyC2d9VA15vv6f9V4R3c2biw7oXUSERP8S4',
@@ -19,14 +29,17 @@ class App extends React.Component {
     Firebase.initializeApp(config);
   }
 
-  render() {
-    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-
-    return (
-      <Provider store={store}>
-        
-      </Provider>
-    );
+  startApp() {
+    Navigation.startTabBasedApp({
+      tabs: [
+        {
+          label: 'First Tab',
+          title: 'My First Tab',
+          screen: 'rbMobile.Testing',
+          icon: require('./images/icons/icon.png')
+        }
+      ]
+    });
   }
 }
 
