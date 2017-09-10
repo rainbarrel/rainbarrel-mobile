@@ -1,34 +1,23 @@
 import React from 'react';
-import { Navigation } from 'react-native-navigation';
-import { Provider } from 'react-redux';
-
-import firebaseInit from './firebase';
-import configureStore from './store';
-import registerScreens from './screens';
-import icon from './images/icons/icon.png';
-
-
-const store = configureStore();
-registerScreens(store, Provider);
+import Firebase from 'firebase';
+import firebaseInit from './initialization/firebase';
+import { startAuthScreen, startApp } from './initialization/app';
 
 class App extends React.Component {
-  static startApp() {
-    Navigation.startTabBasedApp({
-      tabs: [
-        {
-          label: 'First Tab',
-          title: 'My First Tab',
-          screen: 'rbMobile.Testing',
-          icon
-        }
-      ]
+  static launchApp() {
+    Firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        startApp();
+      } else {
+        startAuthScreen();
+      }
     });
   }
 
   constructor(props) {
     super(props);
     firebaseInit();
-    App.startApp();
+    App.launchApp();
   }
 }
 
