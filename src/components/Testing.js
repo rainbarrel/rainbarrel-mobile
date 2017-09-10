@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 
 const Testing = () => (
   <Text>
-    HELLOOO!
+    GREETINGS EARTHLING
   </Text>
 );
 
