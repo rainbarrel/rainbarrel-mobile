@@ -12,7 +12,7 @@ registerScreens(store, Provider);
 export const startAuthScreen = () => {
   Navigation.startSingleScreenApp({
     screen: {
-      screen: 'rbMobile.Auth',
+      screen: 'rbMobile.Login',
       navigatorStyle: {
         navBarHidden: true
       }

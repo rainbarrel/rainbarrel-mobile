@@ -2,11 +2,27 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
-import { Input } from './global';
-import { changeEmail, changePassword } from '../actions';
+import { Input } from '../global';
+import { changeEmail, changePassword } from '../../actions';
 
 
-class Auth extends React.Component {
+class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.showSignup = this.showSignup.bind(this);
+  }
+
+  showSignup() {
+    this.props.navigator.push({
+      screen: 'rbMobile.Signup',
+      navigatorStyle: {
+        navBarHidden: true
+      },
+      animated: true,
+      backButtonHidden: true
+    });
+  }
+
   render() {
     const { containerStyle, titleStyle } = styles;
 
@@ -34,6 +50,10 @@ class Auth extends React.Component {
           onChangeText={text => this.props.changePassword(text)}
           secureTextEntry
         />
+
+        <Text onPress={this.showSignup}>
+          Not a member? Sign up
+        </Text>
       </View>
     );
   }
@@ -61,4 +81,4 @@ const mapDispatchToProps = dispatch => ({
   changePassword: password => dispatch(changePassword(password))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
