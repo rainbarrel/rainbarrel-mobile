@@ -17,6 +17,10 @@ class Signup extends React.Component {
   }
 
   showLogin() {
+    this.props.changeEmail('');
+    this.props.changePassword('');
+    this.props.changePasswordConfirmation('');
+
     this.props.navigator.pop({
       animated: true
     });

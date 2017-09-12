@@ -13,6 +13,9 @@ class Login extends React.Component {
   }
 
   showSignup() {
+    this.props.changeEmail('');
+    this.props.changePassword('');
+
     this.props.navigator.push({
       screen: 'rbMobile.Signup',
       navigatorStyle: {
