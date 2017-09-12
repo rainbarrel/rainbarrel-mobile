@@ -56,7 +56,7 @@ export const signupUserAttempt = ({ email, password }) => {
 
     Firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(user => signupUserSuccess(dispatch, user))
-      .catch(() => signupUserFailure(dispatch));
+      .catch(() => signupUserFailure(dispatch, 'Authentication Failed'));
   };
 };
 
@@ -69,6 +69,9 @@ const signupUserSuccess = (dispatch, user) => {
   startApp();
 };
 
-const signupUserFailure = (dispatch) => {
-  dispatch({ type: SIGNUP_USER_FAILURE });
+export const signupUserFailure = (dispatch, errorMsg) => {
+  dispatch({
+    type: SIGNUP_USER_FAILURE,
+    payload: errorMsg
+  });
 };

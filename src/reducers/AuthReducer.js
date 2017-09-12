@@ -38,7 +38,7 @@ export default (state = INITIAL_STATE, action) => {
     case SIGNUP_USER_SUCCESS:
       return { ...INITIAL_STATE, user: action.payload };
     case SIGNUP_USER_FAILURE:
-      return { ...INITIAL_STATE, error: 'Authentication Failed' };
+      return { ...INITIAL_STATE, error: action.payload };
     default:
       return state;
   }

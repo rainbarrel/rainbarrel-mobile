@@ -2,11 +2,13 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
-import { Input } from '../global';
+import { Input, Button, Spinner } from '../global';
 import {
   changeEmail,
   changePassword,
-  changePasswordConfirmation
+  changePasswordConfirmation,
+  signupUserAttempt,
+  signupUserFailure
 } from '../../actions';
 
 
@@ -14,6 +16,9 @@ class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.showLogin = this.showLogin.bind(this);
+    this.handleButtonPress = this.handleButtonPress.bind(this);
+    this.renderError = this.renderError.bind(this);
+    this.renderButton = this.renderButton.bind(this);
   }
 
   showLogin() {
@@ -24,6 +29,45 @@ class Signup extends React.Component {
     this.props.navigator.pop({
       animated: true
     });
+  }
+
+  handleButtonPress() {
+    const { email, password, passwordConfirmation } = this.props;
+
+    if (password === passwordConfirmation) {
+      this.props.signupUserAttempt(email, password);
+    } else {
+      this.props.signupUserFailure('Passwords do not match');
+    }
+  }
+
+  renderError() {
+    const { errorStyle } = styles;
+    const { error } = this.props;
+
+    if (error.length > 0) {
+      return (
+        <Text style={errorStyle}>
+          {error}
+        </Text>
+      );
+    }
+
+    return null;
+  }
+
+  renderButton() {
+    const { loading } = this.props;
+
+    if (loading) {
+      return <Spinner />;
+    }
+
+    return (
+      <Button onPress={this.handleButtonPress}>
+        Signup
+      </Button>
+    );
   }
 
   render() {
@@ -63,6 +107,9 @@ class Signup extends React.Component {
           secureTextEntry
         />
 
+        {this.renderError()}
+        {this.renderButton()}
+
         <Text onPress={this.showLogin}>
           Already a member? Log in
         </Text>
@@ -80,12 +127,17 @@ const styles = StyleSheet.create({
   titleStyle: {
     marginTop: 40,
     fontSize: 24
+  },
+  errorStyle: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'red'
   }
 });
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, passwordConfirmation } = auth;
-  return { email, password, passwordConfirmation };
+  const { email, password, passwordConfirmation, loading, error } = auth;
+  return { email, password, passwordConfirmation, loading, error };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -93,6 +145,12 @@ const mapDispatchToProps = dispatch => ({
   changePassword: password => dispatch(changePassword(password)),
   changePasswordConfirmation: (passwordConfirmation) => {
     dispatch(changePasswordConfirmation(passwordConfirmation));
+  },
+  signupUserAttempt: (email, password) => {
+    dispatch(signupUserAttempt({ email, password }));
+  },
+  signupUserFailure: (errorMsg) => {
+    signupUserFailure(dispatch, errorMsg);
   }
 });
 
