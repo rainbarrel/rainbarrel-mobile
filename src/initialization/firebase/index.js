@@ -1,12 +1,12 @@
 import Firebase from 'firebase';
 
 const config = {
-  apiKey: 'AIzaSyC2d9VA15vv6f9V4R3c2biw7oXUSERP8S4',
-  authDomain: 'rainbarrel-b1575.firebaseapp.com',
-  databaseURL: 'https://rainbarrel-b1575.firebaseio.com',
-  projectId: 'rainbarrel-b1575',
-  storageBucket: 'rainbarrel-b1575.appspot.com',
-  messagingSenderId: '212513060145'
+  apiKey: 'AIzaSyAbog8thHCc_2lhPwHcP050Hugi97uYo1o',
+  authDomain: 'rainbarrel-dev.firebaseapp.com',
+  databaseURL: 'https://rainbarrel-dev.firebaseio.com',
+  projectId: 'rainbarrel-dev',
+  storageBucket: 'rainbarrel-dev.appspot.com',
+  messagingSenderId: '9213028884'
 };
 
 const firebaseInit = () => {
