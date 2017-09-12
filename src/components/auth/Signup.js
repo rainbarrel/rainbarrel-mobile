@@ -44,6 +44,7 @@ class Signup extends React.Component {
           placeholder="email@email.com"
           value={this.props.email}
           onChangeText={text => this.props.changeEmail(text)}
+          autofocus
         />
 
         <Input

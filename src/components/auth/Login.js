@@ -2,14 +2,17 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
-import { Input } from '../global';
-import { changeEmail, changePassword } from '../../actions';
+import { Input, Button, Spinner } from '../global';
+import { changeEmail, changePassword, loginUserAttempt } from '../../actions';
 
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.showSignup = this.showSignup.bind(this);
+    this.handleButtonPress = this.handleButtonPress.bind(this);
+    this.renderError = this.renderError.bind(this);
+    this.renderButton = this.renderButton.bind(this);
   }
 
   showSignup() {
@@ -24,6 +27,40 @@ class Login extends React.Component {
       animated: true,
       backButtonHidden: true
     });
+  }
+
+  handleButtonPress() {
+    const { email, password } = this.props;
+    this.props.loginUserAttempt(email, password);
+  }
+
+  renderError() {
+    const { errorStyle } = styles;
+    const { error } = this.props;
+
+    if (error.length > 0) {
+      return (
+        <Text style={errorStyle}>
+          {error}
+        </Text>
+      );
+    }
+
+    return null;
+  }
+
+  renderButton() {
+    const { loading } = this.props;
+
+    if (loading) {
+      return <Spinner />;
+    }
+
+    return (
+      <Button onPress={this.handleButtonPress}>
+        Login
+      </Button>
+    );
   }
 
   render() {
@@ -44,6 +81,7 @@ class Login extends React.Component {
           placeholder="email@email.com"
           value={this.props.email}
           onChangeText={text => this.props.changeEmail(text)}
+          autofocus
         />
 
         <Input
@@ -53,6 +91,9 @@ class Login extends React.Component {
           onChangeText={text => this.props.changePassword(text)}
           secureTextEntry
         />
+
+        {this.renderError()}
+        {this.renderButton()}
 
         <Text onPress={this.showSignup}>
           Not a member? Sign up
@@ -71,17 +112,25 @@ const styles = StyleSheet.create({
   titleStyle: {
     marginTop: 40,
     fontSize: 24
+  },
+  errorStyle: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'red'
   }
 });
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password } = auth;
-  return { email, password };
+  const { email, password, loading, error } = auth;
+  return { email, password, loading, error };
 };
 
 const mapDispatchToProps = dispatch => ({
   changeEmail: email => dispatch(changeEmail(email)),
-  changePassword: password => dispatch(changePassword(password))
+  changePassword: password => dispatch(changePassword(password)),
+  loginUserAttempt: (email, password) => {
+    dispatch(loginUserAttempt({ email, password }));
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

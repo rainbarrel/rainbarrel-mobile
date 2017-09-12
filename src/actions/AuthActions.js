@@ -1,11 +1,15 @@
 import Firebase from 'firebase';
+import { startApp } from '../initialization/app';
 import {
   CHANGE_EMAIL,
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_CONFIRMATION,
   LOGIN_USER_ATTEMPT,
   LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAILURE
+  LOGIN_USER_FAILURE,
+  SIGNUP_USER_ATTEMPT,
+  SIGNUP_USER_SUCCESS,
+  SIGNUP_USER_FAILURE
 } from './types';
 
 export const changeEmail = email => ({
@@ -39,9 +43,32 @@ const loginUserSuccess = (dispatch, user) => {
     payload: user
   });
 
-  // startTabBasedApp
+  startApp();
 };
 
 const loginUserFailure = (dispatch) => {
   dispatch({ type: LOGIN_USER_FAILURE });
+};
+
+export const signupUserAttempt = ({ email, password }) => {
+  return (dispatch) => {
+    dispatch({ type: SIGNUP_USER_ATTEMPT });
+
+    Firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then(user => signupUserSuccess(dispatch, user))
+      .catch(() => signupUserFailure(dispatch));
+  };
+};
+
+const signupUserSuccess = (dispatch, user) => {
+  dispatch({
+    type: SIGNUP_USER_SUCCESS,
+    payload: user
+  });
+
+  startApp();
+};
+
+const signupUserFailure = (dispatch) => {
+  dispatch({ type: SIGNUP_USER_FAILURE });
 };
