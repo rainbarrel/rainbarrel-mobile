@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-const Testing = () => (
+const LovedOnes = () => (
   <Text>
-    GREETINGS EARTHLING
+    Loved Ones
   </Text>
 );
 
-export default Testing;
+export { LovedOnes };

@@ -3,7 +3,11 @@ import { Provider } from 'react-redux';
 
 import configureStore from '../../store';
 import registerScreens from '../../screens';
-import icon from '../../images/icons/icon.png';
+
+import searchIcon from '../../images/icons/search.png';
+import lovedOnesIcon from '../../images/icons/loved-ones.png';
+import cameraIcon from '../../images/icons/camera.png';
+import accountIcon from '../../images/icons/account.png';
 
 
 const store = configureStore();
@@ -24,10 +28,28 @@ export const startApp = () => {
   Navigation.startTabBasedApp({
     tabs: [
       {
-        label: 'First Tab',
-        title: 'My First Tab',
-        screen: 'rbMobile.Testing',
-        icon
+        label: 'search',
+        title: 'Search',
+        screen: 'rbMobile.Search',
+        icon: searchIcon
+      },
+      {
+        label: 'loved ones',
+        title: 'Loved Ones',
+        screen: 'rbMobile.LovedOnes',
+        icon: lovedOnesIcon
+      },
+      {
+        label: 'camera',
+        title: 'Camera',
+        screen: 'rbMobile.Camera',
+        icon: cameraIcon
+      },
+      {
+        label: 'account',
+        title: 'Account',
+        screen: 'rbMobile.Account',
+        icon: accountIcon
       }
     ]
   });
