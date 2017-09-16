@@ -12,10 +12,6 @@ class Account extends React.Component {
   render() {
     return (
       <View>
-        <Text>
-          Account
-        </Text>
-
         <Text onPress={Account.handleLogout}>
           Logout
         </Text>
