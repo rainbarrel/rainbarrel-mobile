@@ -1,4 +1,5 @@
 import Firebase from 'firebase';
+import 'firebase/firestore';
 import { startApp } from '../initialization/app';
 import {
   CHANGE_EMAIL,
@@ -61,12 +62,18 @@ export const signupUserAttempt = ({ email, password }) => {
 };
 
 const signupUserSuccess = (dispatch, user) => {
-  dispatch({
-    type: SIGNUP_USER_SUCCESS,
-    payload: user
-  });
+  const db = Firebase.firestore();
+  const { uid, email } = user;
 
-  startApp();
+  db.collection('users').doc(uid).set({ email })
+    .then(() => {
+      dispatch({
+        type: SIGNUP_USER_SUCCESS,
+        payload: user
+      });
+
+      startApp();
+    });
 };
 
 export const signupUserFailure = (dispatch, errorMsg) => {
