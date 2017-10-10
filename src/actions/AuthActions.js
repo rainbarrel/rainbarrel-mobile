@@ -73,7 +73,8 @@ const signupUserSuccess = (dispatch, user) => {
       });
 
       startApp();
-    });
+    })
+    .catch(error => console.log(error));
 };
 
 export const signupUserFailure = (dispatch, errorMsg) => {

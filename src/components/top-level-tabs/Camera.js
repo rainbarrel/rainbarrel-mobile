@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 
 const Camera = () => (
   <Text>
-    Camera
+    Raindrop
   </Text>
 );
 
