@@ -9,7 +9,7 @@ const INITIAL_STATE = {
   searchText: '',
   loading: false,
   error: '',
-  searchUser: null
+  searchUserId: null
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -19,8 +19,10 @@ export default (state = INITIAL_STATE, action) => {
     case SEARCH_ATTEMPT:
       return { ...state, loading: true };
     case SEARCH_SUCCESS:
-      return { ...INITIAL_STATE, searchUser: action.payload };
+      console.log('success!', action.payload);
+      return { ...INITIAL_STATE, searchUserId: action.payload };
     case SEARCH_FAILURE:
+      console.log('failure:(', action.payload);
       return { ...INITIAL_STATE, error: 'User Not Found' };
     default:
       return state;

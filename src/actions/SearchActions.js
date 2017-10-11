@@ -17,16 +17,22 @@ export const searchAttempt = (text) => {
     dispatch({ type: SEARCH_ATTEMPT });
 
     const db = Firebase.firestore();
-    db.somethingOrOther(text)
-      .then(user => searchSuccess(dispatch, user))
+    const usersRef = db.collection('users');
+    const searchQuery = usersRef.where('email', '==', text.toLowerCase());
+
+    searchQuery.get()
+      .then((userDocs) => {
+        const userId = userDocs.docs[0].id;
+        searchSuccess(dispatch, userId);
+      })
       .catch(() => searchFailure(dispatch));
   };
 };
 
-export const searchSuccess = (dispatch, user) => {
+export const searchSuccess = (dispatch, userId) => {
   dispatch({
     type: SEARCH_SUCCESS,
-    payload: user
+    payload: userId
   });
 };
 
