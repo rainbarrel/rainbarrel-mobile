@@ -7,4 +7,4 @@ const LovedOnes = () => (
   </Text>
 );
 
-export { LovedOnes };
+export default LovedOnes;

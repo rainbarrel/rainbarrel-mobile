@@ -30,25 +30,25 @@ export const startApp = () => {
       {
         label: 'search',
         title: 'Search',
-        screen: 'rbMobile.Search',
+        screen: 'rbMobile.SearchTab',
         icon: searchIcon
       },
       {
         label: 'loved ones',
         title: 'Loved Ones',
-        screen: 'rbMobile.LovedOnes',
+        screen: 'rbMobile.LovedOnesTab',
         icon: lovedOnesIcon
       },
       {
         label: 'camera',
         title: 'Camera',
-        screen: 'rbMobile.Camera',
+        screen: 'rbMobile.CameraTab',
         icon: cameraIcon
       },
       {
         label: 'account',
         title: 'Account',
-        screen: 'rbMobile.Account',
+        screen: 'rbMobile.AccountTab',
         icon: accountIcon
       }
     ]

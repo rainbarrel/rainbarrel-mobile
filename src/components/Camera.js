@@ -3,8 +3,8 @@ import { Text } from 'react-native';
 
 const Camera = () => (
   <Text>
-    Raindrop
+    Camera
   </Text>
 );
 
-export { Camera };
+export default Camera;
