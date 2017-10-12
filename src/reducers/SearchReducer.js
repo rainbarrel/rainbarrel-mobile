@@ -19,10 +19,12 @@ export default (state = INITIAL_STATE, action) => {
     case SEARCH_ATTEMPT:
       return { ...state, loading: true };
     case SEARCH_SUCCESS:
-      console.log('success!', action.payload);
-      return { ...INITIAL_STATE, searchUserId: action.payload };
+      return {
+        ...INITIAL_STATE,
+        searchText: state.searchText,
+        searchUserId: action.payload
+      };
     case SEARCH_FAILURE:
-      console.log('failure:(', action.payload);
       return { ...INITIAL_STATE, error: 'User Not Found' };
     default:
       return state;

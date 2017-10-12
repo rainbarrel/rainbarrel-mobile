@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Input, Button, Spinner } from './global';
+import LovedOneRequest from './LovedOneRequest';
 import { changeSearchText, searchAttempt } from '../actions';
 
 
@@ -11,6 +12,8 @@ class Search extends React.Component {
     super(props);
     this.renderButton = this.renderButton.bind(this);
     this.handleButtonPress = this.handleButtonPress.bind(this);
+    this.renderError = this.renderError.bind(this);
+    this.renderRequest = this.renderRequest.bind(this);
   }
 
   handleButtonPress() {
@@ -47,6 +50,18 @@ class Search extends React.Component {
     return null;
   }
 
+  renderRequest() {
+    const { searchUserId, searchText } = this.props;
+
+    if (searchUserId) {
+      return (
+        <LovedOneRequest searchUserId={searchUserId} searchText={searchText} />
+      );
+    }
+
+    return null;
+  }
+
   render() {
     return (
       <View>
@@ -60,6 +75,8 @@ class Search extends React.Component {
 
         {this.renderError()}
         {this.renderButton()}
+
+        {this.renderRequest()}
       </View>
     );
   }
@@ -74,8 +91,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ search }) => {
-  const { searchText, loading, error } = search;
-  return { searchText, loading, error };
+  const { searchText, loading, error, searchUserId } = search;
+  return { searchText, loading, error, searchUserId };
 };
 
 const mapDispatchToProps = dispatch => ({

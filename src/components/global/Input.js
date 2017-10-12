@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Keyboard } from 'react-native';
 
 const Input = (props) => {
   const { labelStyle, inputStyle } = styles;
@@ -23,6 +23,7 @@ const Input = (props) => {
         autofocus={autofocus}
         secureTextEntry={secureTextEntry}
         autoCorrect={false}
+        onSubmitEditing={Keyboard.dismiss}
       />
     </View>
   );
