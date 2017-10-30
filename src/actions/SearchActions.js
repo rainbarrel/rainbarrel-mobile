@@ -21,11 +21,19 @@ export const searchAttempt = (text) => {
     const searchQuery = usersRef.where('email', '==', text.toLowerCase());
 
     searchQuery.get()
-      .then((userDocs) => {
-        const userId = userDocs.docs[0].id;
-        searchSuccess(dispatch, userId);
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length >= 1) {
+          querySnapshot.forEach((doc) => {
+            const userId = doc.id;
+            searchSuccess(dispatch, userId);
+          });
+        } else {
+          searchFailure(dispatch);
+        }
       })
-      .catch(() => searchFailure(dispatch));
+      .catch(() => {
+        searchFailure(dispatch);
+      });
   };
 };
 

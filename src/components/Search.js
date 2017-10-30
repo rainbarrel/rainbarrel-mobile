@@ -39,7 +39,7 @@ class Search extends React.Component {
     const { errorStyle } = styles;
     const { error } = this.props;
 
-    if (error.length > 0) {
+    if (error) {
       return (
         <Text style={errorStyle}>
           {error}
@@ -51,11 +51,11 @@ class Search extends React.Component {
   }
 
   renderRequest() {
-    const { searchUserId, searchText } = this.props;
+    const { foundUserId } = this.props;
 
-    if (searchUserId) {
+    if (foundUserId) {
       return (
-        <LovedOneRequest searchUserId={searchUserId} searchText={searchText} />
+        <LovedOneRequest foundUserId={foundUserId} />
       );
     }
 
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ search }) => {
-  const { searchText, loading, error, searchUserId } = search;
-  return { searchText, loading, error, searchUserId };
+  const { searchText, loading, error, foundUserId } = search;
+  return { searchText, loading, error, foundUserId };
 };
 
 const mapDispatchToProps = dispatch => ({

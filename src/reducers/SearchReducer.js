@@ -8,22 +8,22 @@ import {
 const INITIAL_STATE = {
   searchText: '',
   loading: false,
-  error: '',
-  searchUserId: null
+  foundUserId: null,
+  error: ''
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CHANGE_SEARCH_TEXT:
-      return { ...state, searchText: action.payload };
-    case SEARCH_ATTEMPT:
-      return { ...state, loading: true };
-    case SEARCH_SUCCESS:
       return {
         ...INITIAL_STATE,
-        searchText: state.searchText,
-        searchUserId: action.payload
+        searchText: action.payload,
+        foundUserId: state.foundUserId
       };
+    case SEARCH_ATTEMPT:
+      return { ...INITIAL_STATE, loading: true };
+    case SEARCH_SUCCESS:
+      return { ...INITIAL_STATE, foundUserId: action.payload };
     case SEARCH_FAILURE:
       return { ...INITIAL_STATE, error: 'User Not Found' };
     default:
