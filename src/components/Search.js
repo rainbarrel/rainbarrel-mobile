@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Input, Button, Spinner } from './global';
-import LovedOneRequest from './LovedOneRequest';
+import SendRequest from './SendRequest';
 import { changeSearchText, searchAttempt } from '../actions';
 
 
@@ -51,11 +51,11 @@ class Search extends React.Component {
   }
 
   renderRequest() {
-    const { foundUserId } = this.props;
+    const { foundUser } = this.props;
 
-    if (foundUserId) {
+    if (foundUser) {
       return (
-        <LovedOneRequest foundUserId={foundUserId} />
+        <SendRequest foundUser={foundUser} />
       );
     }
 
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ search }) => {
-  const { searchText, loading, error, foundUserId } = search;
-  return { searchText, loading, error, foundUserId };
+  const { searchText, loading, error, foundUser } = search;
+  return { searchText, loading, error, foundUser };
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -24,8 +24,11 @@ export const searchAttempt = (text) => {
       .then((querySnapshot) => {
         if (querySnapshot.docs.length >= 1) {
           querySnapshot.forEach((doc) => {
-            const userId = doc.id;
-            searchSuccess(dispatch, userId);
+            const { id } = doc;
+            const email = doc.data().email;
+            const user = { id, email };
+
+            searchSuccess(dispatch, user);
           });
         } else {
           searchFailure(dispatch);
@@ -37,10 +40,10 @@ export const searchAttempt = (text) => {
   };
 };
 
-export const searchSuccess = (dispatch, userId) => {
+export const searchSuccess = (dispatch, user) => {
   dispatch({
     type: SEARCH_SUCCESS,
-    payload: userId
+    payload: user
   });
 };
 

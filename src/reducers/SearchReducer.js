@@ -8,7 +8,7 @@ import {
 const INITIAL_STATE = {
   searchText: '',
   loading: false,
-  foundUserId: null,
+  foundUser: null,
   error: ''
 };
 
@@ -18,12 +18,12 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
         searchText: action.payload,
-        foundUserId: state.foundUserId
+        foundUser: state.foundUser
       };
     case SEARCH_ATTEMPT:
       return { ...INITIAL_STATE, loading: true };
     case SEARCH_SUCCESS:
-      return { ...INITIAL_STATE, foundUserId: action.payload };
+      return { ...INITIAL_STATE, foundUser: action.payload };
     case SEARCH_FAILURE:
       return { ...INITIAL_STATE, error: 'User Not Found' };
     default:
