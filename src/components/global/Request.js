@@ -21,16 +21,22 @@ const Request = ({ requestLabel, onPress, children }) => {
 
 const styles = StyleSheet.create({
   containerStyle: {
-
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-around'
   },
   textStyle: {
-
+    padding: 10
   },
   buttonStyle: {
-
+    borderWidth: 1,
+    borderColor: '#D3D3D3',
+    borderRadius: 3,
+    backgroundColor: '#FFDF00',
+    padding: 10
   },
   buttonTextStyle: {
-
+    fontWeight: 'bold'
   }
 });
 
