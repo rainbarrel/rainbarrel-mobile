@@ -1,4 +1,5 @@
 import React from 'react';
+import Firebase from 'firebase';
 import { Request } from './global';
 
 class SendRequest extends React.Component {
@@ -8,7 +9,19 @@ class SendRequest extends React.Component {
   }
 
   sendRequest() {
-    
+    const { foundUser } = this.props;
+    const currentUser = Firebase.auth().currentUser;
+
+    if (currentUser) {
+      const db = Firebase.firestore();
+      const userRef = db.collection('users').doc(foundUser.id);
+
+      userRef.collection('requests').add({
+        requesterId: currentUser.uid,
+        requesterEmail: currentUser.email,
+        createdAt: new Date()
+      });
+    }
   }
 
   render() {
