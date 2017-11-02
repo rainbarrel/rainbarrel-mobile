@@ -3,24 +3,52 @@ import Firebase from 'firebase';
 import { Request } from './global';
 
 class SendRequest extends React.Component {
+  static isValidRequest(currentUser, foundUser) {
+    return (currentUser && currentUser.uid !== foundUser.id);
+  }
+
   constructor(props) {
     super(props);
     this.sendRequest = this.sendRequest.bind(this);
   }
 
   sendRequest() {
-    const { foundUser } = this.props;
     const currentUser = Firebase.auth().currentUser;
+    const { foundUser } = this.props;
 
-    if (currentUser) {
+    if (SendRequest.isValidRequest(currentUser, foundUser)) {
       const db = Firebase.firestore();
-      const userRef = db.collection('users').doc(foundUser.id);
+      const requestsRef = db.collection(`users/${foundUser.id}/requests`);
+      const requestQuery = requestsRef.where(
+        'requesterId', '==', currentUser.uid
+      );
 
-      userRef.collection('requests').add({
-        requesterId: currentUser.uid,
-        requesterEmail: currentUser.email,
-        createdAt: new Date()
-      });
+      requestQuery
+        .get()
+        .then((querySnapshot) => {
+          if (querySnapshot.docs.length >= 1) {
+            querySnapshot.forEach((doc) => {
+              if (doc.status === 'declined') {
+                doc.set({
+                  requesterId: currentUser.uid,
+                  requesterEmail: currentUser.email,
+                  status: 'pending',
+                  createdAt: new Date()
+                });
+              }
+            });
+          } else {
+            requestsRef.add({
+              requesterId: currentUser.uid,
+              requesterEmail: currentUser.email,
+              status: 'pending',
+              createdAt: new Date()
+            });
+          }
+        })
+        .catch(() => {
+          // do something with error. OK for now.
+        });
     }
   }
 

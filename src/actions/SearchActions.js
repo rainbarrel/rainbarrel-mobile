@@ -20,7 +20,8 @@ export const searchAttempt = (text) => {
     const usersRef = db.collection('users');
     const searchQuery = usersRef.where('email', '==', text.toLowerCase());
 
-    searchQuery.get()
+    searchQuery
+      .get()
       .then((querySnapshot) => {
         if (querySnapshot.docs.length >= 1) {
           querySnapshot.forEach((doc) => {
