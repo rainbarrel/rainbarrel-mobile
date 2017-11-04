@@ -9,55 +9,117 @@ class SendRequest extends React.Component {
 
   constructor(props) {
     super(props);
+    this.getRequestDocRef = this.getRequestDocRef.bind(this);
+    this.getRequestDetails = this.getRequestDetails.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
   }
 
-  sendRequest() {
+  componentDidMount() {
     const currentUser = Firebase.auth().currentUser;
     const { foundUser } = this.props;
 
     if (SendRequest.isValidRequest(currentUser, foundUser)) {
-      const db = Firebase.firestore();
-      const requestsRef = db.collection(`users/${foundUser.id}/requests`);
-      const requestQuery = requestsRef.where(
-        'requesterId', '==', currentUser.uid
-      );
+      const requestDocRef = this.getRequestDocRef();
 
-      requestQuery
-        .get()
-        .then((querySnapshot) => {
-          if (querySnapshot.docs.length >= 1) {
-            querySnapshot.forEach((doc) => {
-              if (doc.status === 'declined') {
-                doc.set({
-                  requesterId: currentUser.uid,
-                  requesterEmail: currentUser.email,
-                  status: 'pending',
-                  createdAt: new Date()
-                });
-              }
-            });
-          } else {
-            requestsRef.add({
-              requesterId: currentUser.uid,
-              requesterEmail: currentUser.email,
-              status: 'pending',
-              createdAt: new Date()
-            });
-          }
-        })
-        .catch(() => {
-          // do something with error. OK for now.
-        });
+      if (requestDocRef) {
+        requestStatus = requestDocRef.data().status; 
+        this.props.changeSendRequestStatus(requestStatus);
+      } else {
+
+      }
     }
   }
 
-  render() {
+  getRequestDocRef() {
+    const requestDocRef = null;
+
+    const currentUser = Firebase.auth().currentUser;
     const { foundUser } = this.props;
+    
+    const db = Firebase.firestore();
+    const requestsRef = db.collection(`users/${foundUser.id}/requests`);
+    const requestQuery = requestsRef.where(
+      'requesterId', '==', currentUser.uid
+    );
+
+    requestQuery
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+          querySnapshot.forEach((doc) => {
+            requestDocRef = doc;
+          });
+        }
+      })
+      .catch(() => {
+        // error. doing nothing OK for now.
+      });
+
+    return (requestDocRef);
+  }
+
+  sendRequest() {
+    const { sendRequestStatus } = this.props;
+    const currentUser = Firebase.auth().currentUser;
+    const request = {
+      requesterId: currentUser.uid,
+      requesterEmail: currentUser.email,
+      status: 'pending',
+      createdAt: new Date()
+    };
+
+    switch (sendRequestStatus) {
+      case 'declined':
+        const { sendRequestDoc } = this.props;
+        sendRequestDoc.set(request);
+        break;
+      default:
+        const { foundUser } = this.props;
+        const db = Firebase.firestore();
+        const requestsRef = db.collection(`users/${foundUser.id}/requests`);
+
+        requestsRef.add(request);
+    }
+  }
+
+  getRequestDetails() {
+    const { foundUser, sendRequestStatus } = this.props;
+
+    const requestLabel = foundUser.email;
+    const disabled = sendRequestStatus === 'pending' ||
+                     sendRequestStatus === 'accepted';
+    const onPress = disabled ? null : this.sendRequest;
+
+    const requestButtonText;
+    switch (sendRequestStatus) {
+      case 'pending':
+        requestButtonText = 'Pending';
+        break;
+      case 'accepted':
+        requestButtonText = 'Loved One';
+        break;
+      case 'declined':
+        requestButtonText = 'Send';
+        break;
+      default:
+        requestButtonText = 'Send';
+    }
+
+    return ({ requestLabel, onPress, disabled, requestButtonText });
+  }
+
+  render() {
+    const {
+      requestLabel, onPress, disabled, requestButtonText
+    } = this.getRequestDetails();
 
     return (
-      <Request requestLabel={foundUser.email} onPress={this.sendRequest}>
-        Send
+      <Request
+        requestLabel={requestLabel}
+        onPress={onPress}
+        disabled={disabled}
+      >
+        {requestButtonText}
       </Request>
     );
   }

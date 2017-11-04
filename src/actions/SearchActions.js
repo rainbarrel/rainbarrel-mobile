@@ -23,7 +23,7 @@ export const searchAttempt = (text) => {
     searchQuery
       .get()
       .then((querySnapshot) => {
-        if (querySnapshot.docs.length >= 1) {
+        if (querySnapshot.docs.length > 0) {
           querySnapshot.forEach((doc) => {
             const { id } = doc;
             const email = doc.data().email;
