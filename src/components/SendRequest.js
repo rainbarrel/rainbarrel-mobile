@@ -1,96 +1,52 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Firebase from 'firebase';
 import { Request } from './global';
+import { changeSendRequestStatus } from '../actions';
 
 class SendRequest extends React.Component {
-  static isValidRequest(currentUser, foundUser) {
-    return (currentUser && currentUser.uid !== foundUser.id);
-  }
-
   constructor(props) {
     super(props);
-    this.getRequestDocRef = this.getRequestDocRef.bind(this);
     this.getRequestDetails = this.getRequestDetails.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
+    this.sendRequestDocRef = null;
   }
 
   componentDidMount() {
-    const currentUser = Firebase.auth().currentUser;
+    const user = Firebase.auth().currentUser; // LATER: change to props
     const { foundUser } = this.props;
 
-    if (SendRequest.isValidRequest(currentUser, foundUser)) {
-      const requestDocRef = this.getRequestDocRef();
-
-      if (requestDocRef) {
-        requestStatus = requestDocRef.data().status; 
-        this.props.changeSendRequestStatus(requestStatus);
-      } else {
-
-      }
-    }
-  }
-
-  getRequestDocRef() {
-    const requestDocRef = null;
-
-    const currentUser = Firebase.auth().currentUser;
-    const { foundUser } = this.props;
-    
     const db = Firebase.firestore();
     const requestsRef = db.collection(`users/${foundUser.id}/requests`);
     const requestQuery = requestsRef.where(
-      'requesterId', '==', currentUser.uid
+      'requesterId', '==', user.uid
     );
 
     requestQuery
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
-          querySnapshot.forEach((doc) => {
-            requestDocRef = doc;
-          });
+          const docRef = querySnapshot.docs[0];
+          this.sendRequestDocRef = docRef;
+          const status = docRef.data().status;
+          this.props.changeSendRequestStatus(status);
+        } else {
+          this.props.changeSendRequestStatus(null);
         }
       })
       .catch(() => {
         // error. doing nothing OK for now.
       });
-
-    return (requestDocRef);
-  }
-
-  sendRequest() {
-    const { sendRequestStatus } = this.props;
-    const currentUser = Firebase.auth().currentUser;
-    const request = {
-      requesterId: currentUser.uid,
-      requesterEmail: currentUser.email,
-      status: 'pending',
-      createdAt: new Date()
-    };
-
-    switch (sendRequestStatus) {
-      case 'declined':
-        const { sendRequestDoc } = this.props;
-        sendRequestDoc.set(request);
-        break;
-      default:
-        const { foundUser } = this.props;
-        const db = Firebase.firestore();
-        const requestsRef = db.collection(`users/${foundUser.id}/requests`);
-
-        requestsRef.add(request);
-    }
   }
 
   getRequestDetails() {
     const { foundUser, sendRequestStatus } = this.props;
-
     const requestLabel = foundUser.email;
     const disabled = sendRequestStatus === 'pending' ||
                      sendRequestStatus === 'accepted';
     const onPress = disabled ? null : this.sendRequest;
 
-    const requestButtonText;
+    let requestButtonText;
     switch (sendRequestStatus) {
       case 'pending':
         requestButtonText = 'Pending';
@@ -106,6 +62,39 @@ class SendRequest extends React.Component {
     }
 
     return ({ requestLabel, onPress, disabled, requestButtonText });
+  }
+
+  sendRequest() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+    const { foundUser, sendRequestStatus } = this.props;
+
+    const request = {
+      requesterId: user.uid,
+      requesterEmail: user.email,
+      status: 'pending',
+      createdAt: new Date()
+    };
+
+    if (this.sendRequestDocRef && sendRequestStatus === 'declined') {
+      this.sendRequestDocRef.set(request)
+        .then(() => {
+          this.props.changeSendRequestStatus(request.status);
+        })
+        .catch(() => {
+          // error. doing nothing OK for now.
+        });
+    } else {
+      const db = Firebase.firestore();
+      const requestsRef = db.collection(`users/${foundUser.id}/requests`);
+
+      requestsRef.add(request)
+        .then(() => {
+          this.props.changeSendRequestStatus(request.status);
+        })
+        .catch(() => {
+          // error. doing nothing OK for now.
+        });
+    }
   }
 
   render() {
@@ -125,4 +114,13 @@ class SendRequest extends React.Component {
   }
 }
 
-export default SendRequest;
+const mapStateToProps = ({ request }) => {
+  const { sendRequestStatus } = request;
+  return { sendRequestStatus };
+};
+
+const mapDispatchToProps = dispatch => ({
+  changeSendRequestStatus: status => dispatch(changeSendRequestStatus(status))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SendRequest);

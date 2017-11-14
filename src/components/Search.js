@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
+import Firebase from 'firebase';
 
-import { Input, Button, Spinner } from './global';
+import { Input, Button, Spinner, NonRequest } from './global';
 import SendRequest from './SendRequest';
 import { changeSearchText, searchAttempt } from '../actions';
 
@@ -14,6 +15,13 @@ class Search extends React.Component {
     this.handleButtonPress = this.handleButtonPress.bind(this);
     this.renderError = this.renderError.bind(this);
     this.renderRequest = this.renderRequest.bind(this);
+    this.isValidRequest = this.isValidRequest.bind(this);
+  }
+
+  isValidRequest() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+    const { foundUser } = this.props;
+    return (user && user.uid !== foundUser.id);
   }
 
   handleButtonPress() {
@@ -54,8 +62,17 @@ class Search extends React.Component {
     const { foundUser } = this.props;
 
     if (foundUser) {
+      if (this.isValidRequest()) {
+        return (
+          <SendRequest foundUser={foundUser} />
+        );
+      }
+
+      const user = Firebase.auth().currentUser; // LATER: change to props
+      const nonRequestLabel = user.email;
+
       return (
-        <SendRequest foundUser={foundUser} />
+        <NonRequest nonRequestLabel={nonRequestLabel} />
       );
     }
 
@@ -75,7 +92,6 @@ class Search extends React.Component {
 
         {this.renderError()}
         {this.renderButton()}
-
         {this.renderRequest()}
       </View>
     );
@@ -90,9 +106,10 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ search }) => {
+const mapStateToProps = ({ auth, search }) => {
+  const { user } = auth;
   const { searchText, loading, error, foundUser } = search;
-  return { searchText, loading, error, foundUser };
+  return { user, searchText, loading, error, foundUser };
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -10,8 +10,14 @@ class Account extends React.Component {
   }
 
   render() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+
     return (
       <View>
+        <Text>
+          {user.email}
+        </Text>
+
         <Text onPress={Account.handleLogout}>
           Logout
         </Text>

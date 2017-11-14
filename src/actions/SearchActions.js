@@ -24,13 +24,12 @@ export const searchAttempt = (text) => {
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
-          querySnapshot.forEach((doc) => {
-            const { id } = doc;
-            const email = doc.data().email;
-            const user = { id, email };
+          const userDoc = querySnapshot.docs[0];
+          const { id } = userDoc;
+          const email = userDoc.data().email;
+          const user = { id, email };
 
-            searchSuccess(dispatch, user);
-          });
+          searchSuccess(dispatch, user);
         } else {
           searchFailure(dispatch);
         }

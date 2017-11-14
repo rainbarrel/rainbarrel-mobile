@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Request = ({ requestLabel, onPress, children }) => {
+const Request = ({ requestLabel, onPress, disabled, children }) => {
   const { containerStyle, textStyle, buttonStyle, buttonTextStyle } = styles;
 
   return (
@@ -10,7 +10,11 @@ const Request = ({ requestLabel, onPress, children }) => {
         {requestLabel}
       </Text>
 
-      <TouchableOpacity onPress={onPress} style={buttonStyle}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={buttonStyle}
+        disabled={disabled}
+      >
         <Text style={buttonTextStyle}>
           {children}
         </Text>
