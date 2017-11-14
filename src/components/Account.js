@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Firebase from 'firebase';
-import { startAuthScreen } from '../../initialization/app';
+import { startAuthScreen } from '../initialization/app';
 
 class Account extends React.Component {
   static handleLogout() {
@@ -10,8 +10,14 @@ class Account extends React.Component {
   }
 
   render() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+
     return (
       <View>
+        <Text>
+          {user.email}
+        </Text>
+
         <Text onPress={Account.handleLogout}>
           Logout
         </Text>
@@ -20,4 +26,4 @@ class Account extends React.Component {
   }
 }
 
-export { Account };
+export default Account;

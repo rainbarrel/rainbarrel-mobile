@@ -1,0 +1,126 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import Firebase from 'firebase';
+import { Request } from './global';
+import { changeSendRequestStatus } from '../actions';
+
+class SendRequest extends React.Component {
+  constructor(props) {
+    super(props);
+    this.getRequestDetails = this.getRequestDetails.bind(this);
+    this.sendRequest = this.sendRequest.bind(this);
+    this.sendRequestDocRef = null;
+  }
+
+  componentDidMount() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+    const { foundUser } = this.props;
+
+    const db = Firebase.firestore();
+    const requestsRef = db.collection(`users/${foundUser.id}/requests`);
+    const requestQuery = requestsRef.where(
+      'requesterId', '==', user.uid
+    );
+
+    requestQuery
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+          const docRef = querySnapshot.docs[0];
+          this.sendRequestDocRef = docRef;
+          const status = docRef.data().status;
+          this.props.changeSendRequestStatus(status);
+        } else {
+          this.props.changeSendRequestStatus(null);
+        }
+      })
+      .catch(() => {
+        // error. doing nothing OK for now.
+      });
+  }
+
+  getRequestDetails() {
+    const { foundUser, sendRequestStatus } = this.props;
+    const requestLabel = foundUser.email;
+    const disabled = sendRequestStatus === 'pending' ||
+                     sendRequestStatus === 'accepted';
+    const onPress = disabled ? null : this.sendRequest;
+
+    let requestButtonText;
+    switch (sendRequestStatus) {
+      case 'pending':
+        requestButtonText = 'Pending';
+        break;
+      case 'accepted':
+        requestButtonText = 'Loved One';
+        break;
+      case 'declined':
+        requestButtonText = 'Send';
+        break;
+      default:
+        requestButtonText = 'Send';
+    }
+
+    return ({ requestLabel, onPress, disabled, requestButtonText });
+  }
+
+  sendRequest() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+    const { foundUser, sendRequestStatus } = this.props;
+
+    const request = {
+      requesterId: user.uid,
+      requesterEmail: user.email,
+      status: 'pending',
+      createdAt: new Date()
+    };
+
+    if (this.sendRequestDocRef && sendRequestStatus === 'declined') {
+      this.sendRequestDocRef.set(request)
+        .then(() => {
+          this.props.changeSendRequestStatus(request.status);
+        })
+        .catch(() => {
+          // error. doing nothing OK for now.
+        });
+    } else {
+      const db = Firebase.firestore();
+      const requestsRef = db.collection(`users/${foundUser.id}/requests`);
+
+      requestsRef.add(request)
+        .then(() => {
+          this.props.changeSendRequestStatus(request.status);
+        })
+        .catch(() => {
+          // error. doing nothing OK for now.
+        });
+    }
+  }
+
+  render() {
+    const {
+      requestLabel, onPress, disabled, requestButtonText
+    } = this.getRequestDetails();
+
+    return (
+      <Request
+        requestLabel={requestLabel}
+        onPress={onPress}
+        disabled={disabled}
+      >
+        {requestButtonText}
+      </Request>
+    );
+  }
+}
+
+const mapStateToProps = ({ request }) => {
+  const { sendRequestStatus } = request;
+  return { sendRequestStatus };
+};
+
+const mapDispatchToProps = dispatch => ({
+  changeSendRequestStatus: status => dispatch(changeSendRequestStatus(status))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SendRequest);

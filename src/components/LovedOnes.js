@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-const Camera = () => (
+const LovedOnes = () => (
   <Text>
-    Camera
+    Loved Ones
   </Text>
 );
 
-export { Camera };
+export default LovedOnes;
