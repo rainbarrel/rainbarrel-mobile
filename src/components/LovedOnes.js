@@ -1,11 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import RequestList from './RequestList';
+import ReceivedRequestList from './ReceivedRequestsList';
 // import LovedOnesList from './LovedOnesList';
 
 const LovedOnes = () => (
   <View>
-    <RequestList />
+    <ReceivedRequestList />
   </View>
 );
 

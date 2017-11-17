@@ -3,8 +3,18 @@ import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
 import { changeReceivedRequests } from '../actions';
+import { ReceivedRequest } from './global';
 
-class RequestList extends React.Component {
+class ReceivedRequestsList extends React.Component {
+  static onRespond(request, status) {
+    request.ref.set({ status }, { merge: true });
+  }
+
+  constructor(props) {
+    super(props);
+    this.renderItem = this.renderItem.bind(this);
+  }
+
   componentDidMount() { // LATER: setup a listener to new loved one requests
     const user = Firebase.auth().currentUser; // LATER: change to props
 
@@ -17,10 +27,7 @@ class RequestList extends React.Component {
     requestsQuery
       .get()
       .then((querySnapshot) => {
-        const requests = querySnapshot.docs.map(doc => (
-          doc.data().requesterEmail
-        ));
-
+        const requests = querySnapshot.docs;
         this.props.changeReceivedRequests(requests);
       })
       .catch(() => {
@@ -28,13 +35,24 @@ class RequestList extends React.Component {
       });
   }
 
+  keyExtractor = item => item.id;
+
+  renderItem = ({ item }) => (
+    <ReceivedRequest
+      requestLabel={item.data().requesterEmail}
+      onAccept={() => ReceivedRequestsList.onRespond(item, 'accepted')}
+      onDecline={() => ReceivedRequestsList.onRespond(item, 'declined')}
+    />
+  )
+
   render() {
     const { receivedRequests } = this.props;
 
     return (
       <FlatList
         data={receivedRequests}
-        renderItem=
+        renderItem={this.renderItem}
+        keyExtractor={this.keyExtractor}
       />
     );
   }
@@ -49,4 +67,4 @@ const mapDispatchToProps = dispatch => ({
   changeReceivedRequests: requests => dispatch(changeReceivedRequests(requests))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RequestList);
+export default connect(mapStateToProps, mapDispatchToProps)(ReceivedRequestsList);
