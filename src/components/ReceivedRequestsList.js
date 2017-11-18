@@ -13,9 +13,14 @@ class ReceivedRequestsList extends React.Component {
   constructor(props) {
     super(props);
     this.renderItem = this.renderItem.bind(this);
+    this.fetchPendingRequests = this.fetchPendingRequests.bind(this);
   }
 
   componentDidMount() { // LATER: setup a listener to new loved one requests
+    this.fetchPendingRequests();
+  }
+
+  fetchPendingRequests() {
     const user = Firebase.auth().currentUser; // LATER: change to props
 
     const db = Firebase.firestore();

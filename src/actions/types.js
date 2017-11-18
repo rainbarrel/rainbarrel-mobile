@@ -18,5 +18,5 @@ export const SEARCH_SUCCESS = 'search_success';
 export const SEARCH_FAILURE = 'search_failure';
 
 // Request action types:
-export const CHANGE_SEND_REQUEST_STATUS = 'change_send_request_status';
+export const CHANGE_SENT_REQUEST_STATUS = 'change_sent_request_status';
 export const CHANGE_RECEIVED_REQUESTS = 'change_received_requests';
