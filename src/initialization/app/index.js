@@ -6,7 +6,7 @@ import registerScreens from '../../screens';
 
 import searchIcon from '../../images/icons/search.png';
 import lovedOnesIcon from '../../images/icons/loved-ones.png';
-import cameraIcon from '../../images/icons/camera.png';
+import raindropIcon from '../../images/icons/raindrop.png';
 import accountIcon from '../../images/icons/account.png';
 
 
@@ -40,10 +40,10 @@ export const startApp = () => {
         icon: lovedOnesIcon
       },
       {
-        label: 'camera',
-        title: 'Camera',
-        screen: 'rbMobile.CameraTab',
-        icon: cameraIcon
+        label: 'raindrop',
+        title: 'Raindrop',
+        screen: 'rbMobile.RaindropTab',
+        icon: raindropIcon
       },
       {
         label: 'account',

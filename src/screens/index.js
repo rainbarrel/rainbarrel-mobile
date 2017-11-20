@@ -5,7 +5,7 @@ import Signup from '../components/auth/Signup';
 import {
   SearchTab,
   LovedOnesTab,
-  CameraTab,
+  RaindropTab,
   AccountTab
 } from '../components/top-level-tabs';
 
@@ -17,7 +17,7 @@ const registerScreens = (store, Provider) => {
   // top-level tabs
   Navigation.registerComponent('rbMobile.SearchTab', () => SearchTab, store, Provider);
   Navigation.registerComponent('rbMobile.LovedOnesTab', () => LovedOnesTab, store, Provider);
-  Navigation.registerComponent('rbMobile.CameraTab', () => CameraTab, store, Provider);
+  Navigation.registerComponent('rbMobile.RaindropTab', () => RaindropTab, store, Provider);
   Navigation.registerComponent('rbMobile.AccountTab', () => AccountTab, store, Provider);
 };
 
