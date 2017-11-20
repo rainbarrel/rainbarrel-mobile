@@ -20,3 +20,4 @@ export const SEARCH_FAILURE = 'search_failure';
 // Request action types:
 export const CHANGE_SENT_REQUEST_STATUS = 'change_sent_request_status';
 export const CHANGE_RECEIVED_REQUESTS = 'change_received_requests';
+export const REMOVE_RECEIVED_REQUEST = 'remove_received_request';

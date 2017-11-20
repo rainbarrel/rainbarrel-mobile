@@ -1,6 +1,7 @@
 import {
   CHANGE_SENT_REQUEST_STATUS,
-  CHANGE_RECEIVED_REQUESTS
+  CHANGE_RECEIVED_REQUESTS,
+  REMOVE_RECEIVED_REQUEST
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -14,6 +15,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, sentRequestStatus: action.payload };
     case CHANGE_RECEIVED_REQUESTS:
       return { ...state, receivedRequests: action.payload };
+    case REMOVE_RECEIVED_REQUEST:
+      
     default:
       return state;
   }

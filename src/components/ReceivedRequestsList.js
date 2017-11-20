@@ -2,12 +2,13 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
-import { changeReceivedRequests } from '../actions';
+import { changeReceivedRequests, removeReceivedRequest } from '../actions';
 import { ReceivedRequest } from './global';
 
 class ReceivedRequestsList extends React.Component {
   static onRespond(request, status) {
     request.ref.set({ status }, { merge: true });
+    this.props.removeReceivedRequest(request);
   }
 
   constructor(props) {
@@ -69,7 +70,8 @@ const mapStateToProps = ({ request }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  changeReceivedRequests: requests => dispatch(changeReceivedRequests(requests))
+  changeReceivedRequests: requests => dispatch(changeReceivedRequests(requests)),
+  removeReceivedRequest: request => dispatch(removeReceivedRequest(request))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReceivedRequestsList);

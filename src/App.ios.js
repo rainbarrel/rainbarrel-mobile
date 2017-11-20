@@ -5,6 +5,8 @@ import { startAuthScreen, startApp } from './initialization/app';
 
 class App extends React.Component {
   static launchApp() {
+    console.ignoredYellowBox = ['Remote debugger'];
+
     Firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         startApp();
