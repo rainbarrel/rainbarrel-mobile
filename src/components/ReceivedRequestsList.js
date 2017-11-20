@@ -6,19 +6,20 @@ import { changeReceivedRequests, removeReceivedRequest } from '../actions';
 import { ReceivedRequest } from './global';
 
 class ReceivedRequestsList extends React.Component {
-  static onRespond(request, status) {
-    request.ref.set({ status }, { merge: true });
-    this.props.removeReceivedRequest(request);
-  }
-
   constructor(props) {
     super(props);
     this.renderItem = this.renderItem.bind(this);
     this.fetchPendingRequests = this.fetchPendingRequests.bind(this);
+    this.onRespond = this.onRespond.bind(this);
   }
 
   componentDidMount() { // LATER: setup a listener to new loved one requests
     this.fetchPendingRequests();
+  }
+
+  onRespond(request, status) {
+    request.ref.set({ status }, { merge: true });
+    this.props.removeReceivedRequest(request);
   }
 
   fetchPendingRequests() {
@@ -46,8 +47,8 @@ class ReceivedRequestsList extends React.Component {
   renderItem = ({ item }) => (
     <ReceivedRequest
       requestLabel={item.data().requesterEmail}
-      onAccept={() => ReceivedRequestsList.onRespond(item, 'accepted')}
-      onDecline={() => ReceivedRequestsList.onRespond(item, 'declined')}
+      onAccept={() => this.onRespond(item, 'accepted')}
+      onDecline={() => this.onRespond(item, 'declined')}
     />
   )
 
