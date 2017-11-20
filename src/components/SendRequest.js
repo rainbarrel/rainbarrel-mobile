@@ -2,52 +2,30 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
 import { Request } from './global';
-import { changeSendRequestStatus } from '../actions';
+import { changeSentRequestStatus } from '../actions';
 
 class SendRequest extends React.Component {
   constructor(props) {
     super(props);
     this.getRequestDetails = this.getRequestDetails.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
-    this.sendRequestDocRef = null;
+    this.fetchSentRequest = this.fetchSentRequest.bind(this);
+    this.sentRequestDocRef = null;
   }
 
   componentDidMount() {
-    const user = Firebase.auth().currentUser; // LATER: change to props
-    const { foundUser } = this.props;
-
-    const db = Firebase.firestore();
-    const requestsRef = db.collection(`users/${foundUser.id}/requests`);
-    const requestQuery = requestsRef.where(
-      'requesterId', '==', user.uid
-    );
-
-    requestQuery
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.docs.length > 0) {
-          const docRef = querySnapshot.docs[0];
-          this.sendRequestDocRef = docRef;
-          const status = docRef.data().status;
-          this.props.changeSendRequestStatus(status);
-        } else {
-          this.props.changeSendRequestStatus(null);
-        }
-      })
-      .catch(() => {
-        // error. doing nothing OK for now.
-      });
+    this.fetchSentRequest();
   }
 
   getRequestDetails() {
-    const { foundUser, sendRequestStatus } = this.props;
+    const { foundUser, sentRequestStatus } = this.props;
     const requestLabel = foundUser.email;
-    const disabled = sendRequestStatus === 'pending' ||
-                     sendRequestStatus === 'accepted';
+    const disabled = sentRequestStatus === 'pending' ||
+                     sentRequestStatus === 'accepted';
     const onPress = disabled ? null : this.sendRequest;
 
     let requestButtonText;
-    switch (sendRequestStatus) {
+    switch (sentRequestStatus) {
       case 'pending':
         requestButtonText = 'Pending';
         break;
@@ -64,9 +42,37 @@ class SendRequest extends React.Component {
     return ({ requestLabel, onPress, disabled, requestButtonText });
   }
 
+  fetchSentRequest() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+    const { foundUser } = this.props;
+
+    const db = Firebase.firestore();
+    const requestsRef = db.collection(`users/${foundUser.id}/requests`);
+    const requestQuery = requestsRef.where(
+      'requesterId', '==', user.uid
+    );
+
+    requestQuery
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+          const docRef = querySnapshot.docs[0];
+          this.sentRequestDocRef = docRef;
+
+          const status = this.sentRequestDocRef.data().status;
+          this.props.changeSentRequestStatus(status);
+        } else {
+          this.props.changeSentRequestStatus(null);
+        }
+      })
+      .catch(() => {
+        // error. doing nothing OK for now.
+      });
+  }
+
   sendRequest() {
     const user = Firebase.auth().currentUser; // LATER: change to props
-    const { foundUser, sendRequestStatus } = this.props;
+    const { foundUser, sentRequestStatus } = this.props;
 
     const request = {
       requesterId: user.uid,
@@ -75,10 +81,10 @@ class SendRequest extends React.Component {
       createdAt: new Date()
     };
 
-    if (this.sendRequestDocRef && sendRequestStatus === 'declined') {
-      this.sendRequestDocRef.set(request)
+    if (this.sentRequestDocRef && sentRequestStatus === 'declined') {
+      this.sentRequestDocRef.set(request)
         .then(() => {
-          this.props.changeSendRequestStatus(request.status);
+          this.props.changeSentRequestStatus(request.status);
         })
         .catch(() => {
           // error. doing nothing OK for now.
@@ -89,7 +95,7 @@ class SendRequest extends React.Component {
 
       requestsRef.add(request)
         .then(() => {
-          this.props.changeSendRequestStatus(request.status);
+          this.props.changeSentRequestStatus(request.status);
         })
         .catch(() => {
           // error. doing nothing OK for now.
@@ -115,12 +121,12 @@ class SendRequest extends React.Component {
 }
 
 const mapStateToProps = ({ request }) => {
-  const { sendRequestStatus } = request;
-  return { sendRequestStatus };
+  const { sentRequestStatus } = request;
+  return { sentRequestStatus };
 };
 
 const mapDispatchToProps = dispatch => ({
-  changeSendRequestStatus: status => dispatch(changeSendRequestStatus(status))
+  changeSentRequestStatus: status => dispatch(changeSentRequestStatus(status))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendRequest);

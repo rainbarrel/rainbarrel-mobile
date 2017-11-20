@@ -12,8 +12,8 @@ export const changeSearchText = text => ({
   payload: text
 });
 
-export const searchAttempt = (text) => {
-  return (dispatch) => {
+export const searchAttempt = text => (
+  (dispatch) => {
     dispatch({ type: SEARCH_ATTEMPT });
 
     const db = Firebase.firestore();
@@ -37,8 +37,8 @@ export const searchAttempt = (text) => {
       .catch(() => {
         searchFailure(dispatch);
       });
-  };
-};
+  }
+);
 
 export const searchSuccess = (dispatch, user) => {
   dispatch({

@@ -28,15 +28,15 @@ export const changePasswordConfirmation = passwordConfirmation => ({
   payload: passwordConfirmation
 });
 
-export const loginUserAttempt = ({ email, password }) => {
-  return (dispatch) => {
+export const loginUserAttempt = ({ email, password }) => (
+  (dispatch) => {
     dispatch({ type: LOGIN_USER_ATTEMPT });
 
     Firebase.auth().signInWithEmailAndPassword(email, password)
       .then(user => loginUserSuccess(dispatch, user))
       .catch(() => loginUserFailure(dispatch));
-  };
-};
+  }
+);
 
 const loginUserSuccess = (dispatch, user) => {
   dispatch({
@@ -51,15 +51,15 @@ const loginUserFailure = (dispatch) => {
   dispatch({ type: LOGIN_USER_FAILURE });
 };
 
-export const signupUserAttempt = ({ email, password }) => {
-  return (dispatch) => {
+export const signupUserAttempt = ({ email, password }) => (
+  (dispatch) => {
     dispatch({ type: SIGNUP_USER_ATTEMPT });
 
     Firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(user => signupUserSuccess(dispatch, user))
       .catch(() => signupUserFailure(dispatch, 'Authentication Failed'));
-  };
-};
+  }
+);
 
 const signupUserSuccess = (dispatch, user) => {
   const db = Firebase.firestore();
@@ -74,7 +74,9 @@ const signupUserSuccess = (dispatch, user) => {
 
       startApp();
     })
-    .catch(error => console.log(error));
+    .catch(() => {
+      // error. doing nothing OK for now.
+    });
 };
 
 export const signupUserFailure = (dispatch, errorMsg) => {

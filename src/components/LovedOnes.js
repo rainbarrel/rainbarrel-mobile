@@ -1,10 +1,12 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { View } from 'react-native';
+import ReceivedRequestList from './ReceivedRequestsList';
+// import LovedOnesList from './LovedOnesList';
 
 const LovedOnes = () => (
-  <Text>
-    Loved Ones
-  </Text>
+  <View>
+    <ReceivedRequestList />
+  </View>
 );
 
 export default LovedOnes;
