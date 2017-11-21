@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Firebase from 'firebase';
-import { startAuthScreen } from '../initialization/app';
+import { startAuthScreen } from '../../initialization/app';
 
 class Account extends React.Component {
   static handleLogout() {

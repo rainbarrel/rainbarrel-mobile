@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import ReceivedRequestList from './ReceivedRequestsList';
+import ReceivedRequestList from '../request/ReceivedRequestsList';
 import LovedOnesList from './LovedOnesList';
 
 const LovedOnes = () => (

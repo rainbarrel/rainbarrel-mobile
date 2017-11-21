@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
-import { Request } from './global';
-import { changeSentRequestStatus } from '../actions';
+import { Request } from '../global';
+import { changeSentRequestStatus } from '../../actions';
 
 class SendRequest extends React.Component {
   constructor(props) {
