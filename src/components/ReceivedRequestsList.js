@@ -76,7 +76,7 @@ class ReceivedRequestsList extends React.Component {
 
   renderItem = ({ item }) => (
     <ReceivedRequest
-      requestLabel={item.data().requesterEmail}
+      label={item.data().requesterEmail}
       onAccept={() => this.onAccept(item)}
       onDecline={() => this.onDecline(item)}
     />

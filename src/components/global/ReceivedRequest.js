@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const ReceivedRequest = ({ requestLabel, onAccept, onDecline }) => {
+const ReceivedRequest = ({ label, onAccept, onDecline }) => {
   const { containerStyle, textStyle, buttonStyle, buttonTextStyle } = styles;
 
   return (
     <View style={containerStyle}>
       <Text style={textStyle}>
-        {requestLabel}
+        {label}
       </Text>
 
       <TouchableOpacity
