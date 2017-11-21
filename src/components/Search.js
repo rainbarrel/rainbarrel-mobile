@@ -69,10 +69,10 @@ class Search extends React.Component {
       }
 
       const user = Firebase.auth().currentUser; // LATER: change to props
-      const nonRequestLabel = user.email;
+      const label = user.email;
 
       return (
-        <NonRequest nonRequestLabel={nonRequestLabel} />
+        <NonRequest label={label} />
       );
     }
 

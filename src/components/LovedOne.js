@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const NonRequest = ({ label }) => {
+const LovedOne = ({ label }) => {
   const { containerStyle, textStyle } = styles;
 
   return (
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export { NonRequest };
+export default LovedOne;

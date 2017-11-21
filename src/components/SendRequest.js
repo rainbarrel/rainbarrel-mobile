@@ -19,7 +19,7 @@ class SendRequest extends React.Component {
 
   getRequestDetails() {
     const { foundUser, sentRequestStatus } = this.props;
-    const requestLabel = foundUser.email;
+    const label = foundUser.email;
     const disabled = sentRequestStatus === 'pending' ||
                      sentRequestStatus === 'accepted';
     const onPress = disabled ? null : this.sendRequest;
@@ -39,7 +39,7 @@ class SendRequest extends React.Component {
         requestButtonText = 'Send';
     }
 
-    return ({ requestLabel, onPress, disabled, requestButtonText });
+    return ({ label, onPress, disabled, requestButtonText });
   }
 
   fetchSentRequest() {
@@ -105,12 +105,12 @@ class SendRequest extends React.Component {
 
   render() {
     const {
-      requestLabel, onPress, disabled, requestButtonText
+      label, onPress, disabled, requestButtonText
     } = this.getRequestDetails();
 
     return (
       <Request
-        requestLabel={requestLabel}
+        label={label}
         onPress={onPress}
         disabled={disabled}
       >
