@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
 import LovedOne from './LovedOne';
-import { changeLovedOnes } from '../actions';
+import { changeLovedOnes } from '../../actions';
 
 class LovedOnesList extends React.Component {
   constructor(props) {

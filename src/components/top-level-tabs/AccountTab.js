@@ -1,5 +1,5 @@
 import React from 'react';
-import Account from '../Account';
+import Account from '../account/Account';
 
 const AccountTab = () => (
   <Account />

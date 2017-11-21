@@ -1,5 +1,5 @@
 import React from 'react';
-import LovedOnes from '../LovedOnes';
+import LovedOnes from '../loved-ones/LovedOnes';
 
 const LovedOnesTab = () => (
   <LovedOnes />

@@ -1,5 +1,5 @@
 import React from 'react';
-import Raindrop from '../Raindrop';
+import Raindrop from '../raindrop/Raindrop';
 
 const RaindropTab = () => (
   <Raindrop />
