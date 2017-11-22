@@ -12,7 +12,8 @@ class ReceivedRequestsList extends React.Component {
     this.fetchPendingRequests = this.fetchPendingRequests.bind(this);
     this.onAccept = this.onAccept.bind(this);
     this.onDecline = this.onDecline.bind(this);
-    this.addLovedOne = this.addLovedOne.bind(this);
+    this.addMyLovedOne = this.addMyLovedOne.bind(this);
+    this.addTheirLovedOne = this.addTheirLovedOne.bind(this);
   }
 
   componentDidMount() { // LATER: setup a listener to new loved one requests
@@ -22,7 +23,9 @@ class ReceivedRequestsList extends React.Component {
   onAccept(request) {
     request.ref.set({ status: 'accepted' }, { merge: true });
     this.props.removeReceivedRequest(request);
-    this.addLovedOne(request);
+
+    this.addMyLovedOne(request);
+    this.addTheirLovedOne(request);
   }
 
   onDecline(request) {
@@ -30,7 +33,7 @@ class ReceivedRequestsList extends React.Component {
     this.props.removeReceivedRequest(request);
   }
 
-  addLovedOne(request) { // Not static yet. may use 'this' in promise handlers
+  addMyLovedOne(request) { // Not static yet. may use 'this' in promises
     const id = request.data().requesterId;
     const email = request.data().requesterEmail;
     const lovedOneDoc = {
@@ -39,11 +42,35 @@ class ReceivedRequestsList extends React.Component {
       createdAt: new Date()
     };
 
-    const user = Firebase.auth().currentUser; // LATER: change to props
     const db = Firebase.firestore();
-    const lovedOnesRef = db.collection(`users/${user.uid}/lovedOnes`);
+    const user = Firebase.auth().currentUser; // LATER: change to props
+    const myLovedOnesRef = db.collection(`users/${user.uid}/lovedOnes`);
 
-    lovedOnesRef.add(lovedOneDoc)
+    myLovedOnesRef.add(lovedOneDoc)
+      .then(() => {
+        // success. doing nothing OK for now.
+      })
+      .catch(() => {
+        // error. doing nothing OK for now.
+      });
+  }
+
+  addTheirLovedOne(request) { // Not static yet. may use 'this' in promises
+    const user = Firebase.auth().currentUser; // LATER: change to props
+
+    const id = user.uid;
+    const email = user.email;
+    const lovedOneDoc = {
+      id,
+      email,
+      createdAt: new Date()
+    };
+
+    const db = Firebase.firestore();
+    const requesterId = request.data().requesterId;
+    const theirLovedOnesRef = db.collection(`users/${requesterId}/lovedOnes`);
+
+    theirLovedOnesRef.add(lovedOneDoc)
       .then(() => {
         // success. doing nothing OK for now.
       })
