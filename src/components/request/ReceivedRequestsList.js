@@ -83,8 +83,10 @@ class ReceivedRequestsList extends React.Component {
     const user = Firebase.auth().currentUser; // LATER: change to props
 
     const db = Firebase.firestore();
-    const requestsRef = db.collection(`users/${user.uid}/requests`);
+    const requestsRef = db.collection('requests');
     const requestsQuery = requestsRef.where(
+      'requesteeId', '==', user.uid
+    ).where(
       'status', '==', 'pending'
     );
 

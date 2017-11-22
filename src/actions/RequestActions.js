@@ -1,11 +1,11 @@
 import {
-  CHANGE_SENT_REQUEST_STATUS,
+  CHANGE_REQUEST_STATUS,
   CHANGE_RECEIVED_REQUESTS,
   REMOVE_RECEIVED_REQUEST
 } from './types';
 
-export const changeSentRequestStatus = status => ({
-  type: CHANGE_SENT_REQUEST_STATUS,
+export const changeRequestStatus = status => ({
+  type: CHANGE_REQUEST_STATUS,
   payload: status
 });
 
