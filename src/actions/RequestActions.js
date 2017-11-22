@@ -4,7 +4,7 @@ import {
   REMOVE_RECEIVED_REQUEST
 } from './types';
 
-export const changeSendRequestStatus = status => ({
+export const changeSentRequestStatus = status => ({
   type: CHANGE_SENT_REQUEST_STATUS,
   payload: status
 });
