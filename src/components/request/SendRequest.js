@@ -9,19 +9,19 @@ class SendRequest extends React.Component {
     super(props);
     this.getRequestDetails = this.getRequestDetails.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
-    this.fetchRequest = this.fetchRequest.bind(this);
+    this.fetchSentRequest = this.fetchSentRequest.bind(this);
+    this.fetchReceivedRequest = this.fetchReceivedRequest.bind(this);
     this.requestDocRef = null;
   }
 
   componentDidMount() {
-    this.fetchRequest();
+    this.fetchSentRequest();
   }
 
   getRequestDetails() {
     const { foundUser, requestStatus } = this.props;
     const label = foundUser.email;
-    const disabled = requestStatus === 'pending' ||
-                     requestStatus === 'accepted';
+    const disabled = ['pending', 'accepted', 'received'].includes(requestStatus);
     const onPress = disabled ? null : this.sendRequest;
 
     let requestButtonText;
@@ -35,6 +35,9 @@ class SendRequest extends React.Component {
       case 'declined':
         requestButtonText = 'Send';
         break;
+      case 'received':
+        requestButtonText = 'Respond to Request';
+        break;
       default:
         requestButtonText = 'Send';
     }
@@ -42,7 +45,7 @@ class SendRequest extends React.Component {
     return ({ label, onPress, disabled, requestButtonText });
   }
 
-  fetchRequest() {
+  fetchSentRequest() {
     const user = Firebase.auth().currentUser; // LATER: change to props
     const { foundUser } = this.props;
 
@@ -60,9 +63,43 @@ class SendRequest extends React.Component {
         if (querySnapshot.docs.length > 0) {
           const docRef = querySnapshot.docs[0];
           this.requestDocRef = docRef;
-
           const status = this.requestDocRef.data().status;
+
           this.props.changeRequestStatus(status);
+        } else {
+          this.fetchReceivedRequest();
+        }
+      })
+      .catch(() => {
+        // error. doing nothing OK for now.
+      });
+  }
+
+  fetchReceivedRequest() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+    const { foundUser } = this.props;
+
+    const db = Firebase.firestore();
+    const requestsRef = db.collection('requests');
+    const requestQuery = requestsRef.where(
+      'requesteeId', '==', user.uid
+    ).where(
+      'requesterId', '==', foundUser.id
+    );
+
+    requestQuery
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+          const docRef = querySnapshot.docs[0];
+          this.requestDocRef = docRef;
+          const status = this.requestDocRef.data().status;
+
+          if (status === 'pending') {
+            this.props.changeRequestStatus('received');
+          } else {
+            this.props.changeRequestStatus(status);
+          }
         } else {
           this.props.changeRequestStatus(null);
         }
