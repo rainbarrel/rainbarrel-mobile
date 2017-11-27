@@ -21,7 +21,12 @@ class ReceivedRequestsList extends React.Component {
   }
 
   onAccept(request) {
-    request.ref.set({ status: 'accepted' }, { merge: true });
+    const date = new Date();
+
+    request.ref.set({
+      status: 'accepted',
+      updatedAt: date
+    }, { merge: true });
     this.props.removeReceivedRequest(request);
 
     this.addMyLovedOne(request);
@@ -29,17 +34,24 @@ class ReceivedRequestsList extends React.Component {
   }
 
   onDecline(request) {
-    request.ref.set({ status: 'declined' }, { merge: true });
+    const date = new Date();
+
+    request.ref.set({
+      status: 'declined',
+      updatedAt: date
+    }, { merge: true });
     this.props.removeReceivedRequest(request);
   }
 
   addMyLovedOne(request) { // Not static yet. may use 'this' in promises
     const id = request.data().requesterId;
     const email = request.data().requesterEmail;
+    const date = new Date();
+
     const lovedOneDoc = {
       id,
       email,
-      createdAt: new Date()
+      createdAt: date
     };
 
     const db = Firebase.firestore();
@@ -60,10 +72,12 @@ class ReceivedRequestsList extends React.Component {
 
     const id = user.uid;
     const email = user.email;
+    const date = new Date();
+
     const lovedOneDoc = {
       id,
       email,
-      createdAt: new Date()
+      createdAt: date
     };
 
     const db = Firebase.firestore();

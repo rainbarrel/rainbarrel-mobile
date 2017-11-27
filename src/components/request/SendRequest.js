@@ -9,13 +9,13 @@ class SendRequest extends React.Component {
     super(props);
     this.getRequestDetails = this.getRequestDetails.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
-    this.fetchSentRequest = this.fetchSentRequest.bind(this);
     this.fetchReceivedRequest = this.fetchReceivedRequest.bind(this);
+    this.fetchSentRequest = this.fetchSentRequest.bind(this);
     this.requestDocRef = null;
   }
 
   componentDidMount() {
-    this.fetchSentRequest();
+    this.fetchReceivedRequest();
   }
 
   getRequestDetails() {
@@ -45,36 +45,6 @@ class SendRequest extends React.Component {
     return ({ label, onPress, disabled, requestButtonText });
   }
 
-  fetchSentRequest() {
-    const user = Firebase.auth().currentUser; // LATER: change to props
-    const { foundUser } = this.props;
-
-    const db = Firebase.firestore();
-    const requestsRef = db.collection('requests');
-    const requestQuery = requestsRef.where(
-      'requesterId', '==', user.uid
-    ).where(
-      'requesteeId', '==', foundUser.id
-    );
-
-    requestQuery
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.docs.length > 0) {
-          const docRef = querySnapshot.docs[0];
-          this.requestDocRef = docRef;
-          const status = this.requestDocRef.data().status;
-
-          this.props.changeRequestStatus(status);
-        } else {
-          this.fetchReceivedRequest();
-        }
-      })
-      .catch(() => {
-        // error. doing nothing OK for now.
-      });
-  }
-
   fetchReceivedRequest() {
     const user = Firebase.auth().currentUser; // LATER: change to props
     const { foundUser } = this.props;
@@ -91,15 +61,49 @@ class SendRequest extends React.Component {
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
-          const docRef = querySnapshot.docs[0];
-          this.requestDocRef = docRef;
-          const status = this.requestDocRef.data().status;
+          const doc = querySnapshot.docs[0];
+          const status = doc.data().status;
 
-          if (status === 'pending') {
-            this.props.changeRequestStatus('received');
-          } else {
-            this.props.changeRequestStatus(status);
+          switch (status) {
+            case 'pending':
+              this.props.changeRequestStatus('received');
+              break;
+            case 'accepted':
+              this.props.changeRequestStatus(status);
+              break;
+            default:
+              this.fetchSentRequest();
           }
+        } else {
+          this.fetchSentRequest();
+        }
+      })
+      .catch(() => {
+        // error. doing nothing OK for now.
+      });
+  }
+
+  fetchSentRequest() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+    const { foundUser } = this.props;
+
+    const db = Firebase.firestore();
+    const requestsRef = db.collection('requests');
+    const requestQuery = requestsRef.where(
+      'requesterId', '==', user.uid
+    ).where(
+      'requesteeId', '==', foundUser.id
+    );
+
+    requestQuery
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+          const doc = querySnapshot.docs[0];
+          this.requestDocRef = doc.ref;
+          const status = doc.data().status;
+
+          this.props.changeRequestStatus(status);
         } else {
           this.props.changeRequestStatus(null);
         }
@@ -113,17 +117,19 @@ class SendRequest extends React.Component {
     const user = Firebase.auth().currentUser; // LATER: change to props
     const { foundUser, requestStatus } = this.props;
 
-    const request = {
+    let request = {
       requesterId: user.uid,
       requesterEmail: user.email,
       requesteeId: foundUser.id,
       requesteeEmail: foundUser.email,
-      status: 'pending',
-      createdAt: new Date()
+      status: 'pending'
     };
 
-    if (this.requestDocRef && requestStatus === 'declined') {
-      this.requestDocRef.set(request)
+    if (requestStatus === 'declined') {
+      const date = new Date();
+      request = { ...request, updatedAt: date };
+
+      this.requestDocRef.set(request, { merge: true })
         .then(() => {
           this.props.changeRequestStatus(request.status);
         })
@@ -133,6 +139,9 @@ class SendRequest extends React.Component {
     } else {
       const db = Firebase.firestore();
       const requestsRef = db.collection('requests');
+
+      const date = new Date();
+      request = { ...request, createdAt: date, updatedAt: date };
 
       requestsRef.add(request)
         .then(() => {
