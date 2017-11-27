@@ -1,3 +1,3 @@
-import App from './src/App.ios';
+import App from './src/App';
 
 const app = new App();
