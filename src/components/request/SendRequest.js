@@ -2,30 +2,30 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
 import { Request } from '../global';
-import { changeSentRequestStatus } from '../../actions';
+import { changeRequestStatus } from '../../actions';
 
 class SendRequest extends React.Component {
   constructor(props) {
     super(props);
     this.getRequestDetails = this.getRequestDetails.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
+    this.fetchReceivedRequest = this.fetchReceivedRequest.bind(this);
     this.fetchSentRequest = this.fetchSentRequest.bind(this);
-    this.sentRequestDocRef = null;
+    this.requestDocRef = null;
   }
 
   componentDidMount() {
-    this.fetchSentRequest();
+    this.fetchReceivedRequest();
   }
 
   getRequestDetails() {
-    const { foundUser, sentRequestStatus } = this.props;
+    const { foundUser, requestStatus } = this.props;
     const label = foundUser.email;
-    const disabled = sentRequestStatus === 'pending' ||
-                     sentRequestStatus === 'accepted';
+    const disabled = ['pending', 'accepted', 'received'].includes(requestStatus);
     const onPress = disabled ? null : this.sendRequest;
 
     let requestButtonText;
-    switch (sentRequestStatus) {
+    switch (requestStatus) {
       case 'pending':
         requestButtonText = 'Pending';
         break;
@@ -35,6 +35,9 @@ class SendRequest extends React.Component {
       case 'declined':
         requestButtonText = 'Send';
         break;
+      case 'received':
+        requestButtonText = 'Respond to Request';
+        break;
       default:
         requestButtonText = 'Send';
     }
@@ -42,27 +45,67 @@ class SendRequest extends React.Component {
     return ({ label, onPress, disabled, requestButtonText });
   }
 
-  fetchSentRequest() {
+  fetchReceivedRequest() {
     const user = Firebase.auth().currentUser; // LATER: change to props
     const { foundUser } = this.props;
 
     const db = Firebase.firestore();
-    const requestsRef = db.collection(`users/${foundUser.id}/requests`);
+    const requestsRef = db.collection('requests');
     const requestQuery = requestsRef.where(
-      'requesterId', '==', user.uid
+      'requesteeId', '==', user.uid
+    ).where(
+      'requesterId', '==', foundUser.id
     );
 
     requestQuery
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
-          const docRef = querySnapshot.docs[0];
-          this.sentRequestDocRef = docRef;
+          const doc = querySnapshot.docs[0];
+          const status = doc.data().status;
 
-          const status = this.sentRequestDocRef.data().status;
-          this.props.changeSentRequestStatus(status);
+          switch (status) {
+            case 'pending':
+              this.props.changeRequestStatus('received');
+              break;
+            case 'accepted':
+              this.props.changeRequestStatus(status);
+              break;
+            default:
+              this.fetchSentRequest();
+          }
         } else {
-          this.props.changeSentRequestStatus(null);
+          this.fetchSentRequest();
+        }
+      })
+      .catch(() => {
+        // error. doing nothing OK for now.
+      });
+  }
+
+  fetchSentRequest() {
+    const user = Firebase.auth().currentUser; // LATER: change to props
+    const { foundUser } = this.props;
+
+    const db = Firebase.firestore();
+    const requestsRef = db.collection('requests');
+    const requestQuery = requestsRef.where(
+      'requesterId', '==', user.uid
+    ).where(
+      'requesteeId', '==', foundUser.id
+    );
+
+    requestQuery
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+          const doc = querySnapshot.docs[0];
+          this.requestDocRef = doc.ref;
+          const status = doc.data().status;
+
+          this.props.changeRequestStatus(status);
+        } else {
+          this.props.changeRequestStatus(null);
         }
       })
       .catch(() => {
@@ -72,30 +115,37 @@ class SendRequest extends React.Component {
 
   sendRequest() {
     const user = Firebase.auth().currentUser; // LATER: change to props
-    const { foundUser, sentRequestStatus } = this.props;
+    const { foundUser, requestStatus } = this.props;
 
-    const request = {
+    let request = {
       requesterId: user.uid,
       requesterEmail: user.email,
-      status: 'pending',
-      createdAt: new Date()
+      requesteeId: foundUser.id,
+      requesteeEmail: foundUser.email,
+      status: 'pending'
     };
 
-    if (this.sentRequestDocRef && sentRequestStatus === 'declined') {
-      this.sentRequestDocRef.set(request)
+    if (requestStatus === 'declined') {
+      const date = new Date();
+      request = { ...request, updatedAt: date };
+
+      this.requestDocRef.set(request, { merge: true })
         .then(() => {
-          this.props.changeSentRequestStatus(request.status);
+          this.props.changeRequestStatus(request.status);
         })
         .catch(() => {
           // error. doing nothing OK for now.
         });
     } else {
       const db = Firebase.firestore();
-      const requestsRef = db.collection(`users/${foundUser.id}/requests`);
+      const requestsRef = db.collection('requests');
+
+      const date = new Date();
+      request = { ...request, createdAt: date, updatedAt: date };
 
       requestsRef.add(request)
         .then(() => {
-          this.props.changeSentRequestStatus(request.status);
+          this.props.changeRequestStatus(request.status);
         })
         .catch(() => {
           // error. doing nothing OK for now.
@@ -121,12 +171,12 @@ class SendRequest extends React.Component {
 }
 
 const mapStateToProps = ({ request }) => {
-  const { sentRequestStatus } = request;
-  return { sentRequestStatus };
+  const { requestStatus } = request;
+  return { requestStatus };
 };
 
 const mapDispatchToProps = dispatch => ({
-  changeSentRequestStatus: status => dispatch(changeSentRequestStatus(status))
+  changeRequestStatus: status => dispatch(changeRequestStatus(status))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendRequest);
