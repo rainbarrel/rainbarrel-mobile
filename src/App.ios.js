@@ -1,11 +1,13 @@
 import React from 'react';
 import Firebase from 'firebase';
-import firebaseInit from './initialization/firebase';
+import initFirebase from './initialization/firebase';
 import { startAuthScreen, startApp } from './initialization/app';
 
 class App extends React.Component {
   static launchApp() {
-    console.ignoredYellowBox = ['Remote debugger'];
+    if (process.env.NODE_ENV === 'development') {
+      App.configureDev();
+    }
 
     Firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -16,9 +18,13 @@ class App extends React.Component {
     });
   }
 
+  static configureDev() {
+    console.ignoredYellowBox = ['Remote debugger'];
+  }
+
   constructor(props) {
     super(props);
-    firebaseInit();
+    initFirebase();
     App.launchApp();
   }
 }
