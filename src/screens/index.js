@@ -11,14 +11,14 @@ import {
 
 const registerScreens = (store, Provider) => {
   // auth
-  Navigation.registerComponent('rbMobile.Login', () => Login, store, Provider);
-  Navigation.registerComponent('rbMobile.Signup', () => Signup, store, Provider);
+  Navigation.registerComponent('RainbarrelMobile.Login', () => Login, store, Provider);
+  Navigation.registerComponent('RainbarrelMobile.Signup', () => Signup, store, Provider);
 
   // top-level tabs
-  Navigation.registerComponent('rbMobile.SearchTab', () => SearchTab, store, Provider);
-  Navigation.registerComponent('rbMobile.LovedOnesTab', () => LovedOnesTab, store, Provider);
-  Navigation.registerComponent('rbMobile.RaindropTab', () => RaindropTab, store, Provider);
-  Navigation.registerComponent('rbMobile.AccountTab', () => AccountTab, store, Provider);
+  Navigation.registerComponent('RainbarrelMobile.SearchTab', () => SearchTab, store, Provider);
+  Navigation.registerComponent('RainbarrelMobile.LovedOnesTab', () => LovedOnesTab, store, Provider);
+  Navigation.registerComponent('RainbarrelMobile.RaindropTab', () => RaindropTab, store, Provider);
+  Navigation.registerComponent('RainbarrelMobile.AccountTab', () => AccountTab, store, Provider);
 };
 
 export default registerScreens;
