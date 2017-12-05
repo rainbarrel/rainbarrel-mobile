@@ -20,7 +20,7 @@ class Login extends React.Component {
     this.props.changePassword('');
 
     this.props.navigator.push({
-      screen: 'rbMobile.Signup',
+      screen: 'RainbarrelMobile.Signup',
       navigatorStyle: {
         navBarHidden: true
       },
