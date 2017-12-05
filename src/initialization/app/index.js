@@ -16,7 +16,7 @@ registerScreens(store, Provider);
 export const startAuthScreen = () => {
   Navigation.startSingleScreenApp({
     screen: {
-      screen: 'rbMobile.Login',
+      screen: 'RainbarrelMobile.Login',
       navigatorStyle: {
         navBarHidden: true
       }
@@ -30,25 +30,25 @@ export const startApp = () => {
       {
         label: 'search',
         title: 'Search',
-        screen: 'rbMobile.SearchTab',
+        screen: 'RainbarrelMobile.SearchTab',
         icon: searchIcon
       },
       {
         label: 'loved ones',
         title: 'Loved Ones',
-        screen: 'rbMobile.LovedOnesTab',
+        screen: 'RainbarrelMobile.LovedOnesTab',
         icon: lovedOnesIcon
       },
       {
         label: 'raindrop',
         title: 'Raindrop',
-        screen: 'rbMobile.RaindropTab',
+        screen: 'RainbarrelMobile.RaindropTab',
         icon: raindropIcon
       },
       {
         label: 'account',
         title: 'Account',
-        screen: 'rbMobile.AccountTab',
+        screen: 'RainbarrelMobile.AccountTab',
         icon: accountIcon
       }
     ]
