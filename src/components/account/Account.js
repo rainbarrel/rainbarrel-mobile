@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Firebase from 'firebase';
-import { startAuthScreen } from '../../initialization/app';
+import { startAuth } from '../../initialization/app';
 
 class Account extends React.Component {
   static handleLogout() {
     Firebase.auth().signOut();
-    startAuthScreen();
+    startAuth();
   }
 
   render() {
