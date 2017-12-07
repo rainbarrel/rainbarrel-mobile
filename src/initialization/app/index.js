@@ -13,7 +13,7 @@ import accountIcon from '../../images/icons/account.png';
 const store = configureStore();
 registerScreens(store, Provider);
 
-export const startAuthScreen = () => {
+export const startAuth = () => {
   Navigation.startSingleScreenApp({
     screen: {
       screen: 'RainbarrelMobile.Login',
