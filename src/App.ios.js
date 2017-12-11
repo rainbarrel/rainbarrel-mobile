@@ -4,7 +4,7 @@ import initFirebase from './initialization/firebase';
 import { startAuth, startApp } from './initialization/app';
 
 class App extends React.Component {
-  static launchApp() {
+  static launch() {
     Firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         startApp();
@@ -26,7 +26,7 @@ class App extends React.Component {
       App.configureDev();
     }
 
-    App.launchApp();
+    App.launch();
   }
 }
 
