@@ -4,7 +4,7 @@ import Firebase from 'firebase';
 import { startAuth } from '../../initialization/app';
 
 class Account extends React.Component {
-  static handleLogout() {
+  static logout() {
     Firebase.auth().signOut();
     startAuth();
   }
@@ -18,7 +18,7 @@ class Account extends React.Component {
           {user.email}
         </Text>
 
-        <Text onPress={Account.handleLogout}>
+        <Text onPress={Account.logout}>
           Logout
         </Text>
       </View>
