@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
 
-import { Input, Button, Spinner, NonRequest } from '../global';
+import { Input, Button, Spinner, NonRequest } from '../common';
 import SendRequest from '../request/SendRequest';
 import { changeSearchText, searchAttempt } from '../../actions';
 

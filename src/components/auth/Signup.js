@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
-import { Input, Button, Spinner } from '../global';
+import { Input, Button, Spinner } from '../common';
 import {
   changeEmail,
   changePassword,
