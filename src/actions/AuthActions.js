@@ -1,6 +1,6 @@
 import Firebase from 'firebase';
 import 'firebase/firestore';
-import { startApp } from '../initialization/app';
+import { startApp, startAuth } from '../initialization/app';
 import {
   CHANGE_EMAIL,
   CHANGE_PASSWORD,
@@ -10,7 +10,10 @@ import {
   LOGIN_USER_FAILURE,
   SIGNUP_USER_ATTEMPT,
   SIGNUP_USER_SUCCESS,
-  SIGNUP_USER_FAILURE
+  SIGNUP_USER_FAILURE,
+  LOGOUT_USER_ATTEMPT,
+  LOGOUT_USER_SUCCESS,
+  LOGOUT_USER_FAILURE
 } from './types';
 
 export const changeEmail = email => ({
@@ -82,6 +85,30 @@ const signupUserSuccess = (dispatch, user) => {
 export const signupUserFailure = (dispatch, errorMsg) => {
   dispatch({
     type: SIGNUP_USER_FAILURE,
+    payload: errorMsg
+  });
+};
+
+export const logoutUserAttempt = () => (
+  (dispatch) => {
+    dispatch({ type: LOGOUT_USER_ATTEMPT });
+
+    Firebase.auth().signOut()
+      .then(() => {
+        logoutUserSuccess(dispatch);
+        startAuth();
+      })
+      .catch(() => logoutUserFailure(dispatch, 'Logout Attempt Failed'));
+  }
+);
+
+const logoutUserSuccess = (dispatch) => {
+  dispatch({ type: LOGOUT_USER_SUCCESS });
+};
+
+const logoutUserFailure = (dispatch, errorMsg) => {
+  dispatch({
+    type: LOGOUT_USER_FAILURE,
     payload: errorMsg
   });
 };

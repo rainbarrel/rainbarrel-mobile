@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
 import { changeReceivedRequests, removeReceivedRequest } from '../../actions';
-import { ReceivedRequest } from '../global';
+import { ReceivedRequest } from '../common';
 
 class ReceivedRequestsList extends React.Component {
   constructor(props) {

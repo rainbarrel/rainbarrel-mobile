@@ -1,29 +1,20 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Firebase from 'firebase';
-import { startAuth } from '../../initialization/app';
+import Logout from '../auth/Logout';
 
-class Account extends React.Component {
-  static logout() {
-    Firebase.auth().signOut();
-    startAuth();
-  }
+const Account = () => {
+  const user = Firebase.auth().currentUser; // LATER: change to props
 
-  render() {
-    const user = Firebase.auth().currentUser; // LATER: change to props
+  return (
+    <View>
+      <Text>
+        {user.email}
+      </Text>
 
-    return (
-      <View>
-        <Text>
-          {user.email}
-        </Text>
-
-        <Text onPress={Account.logout}>
-          Logout
-        </Text>
-      </View>
-    );
-  }
-}
+      <Logout />
+    </View>
+  );
+};
 
 export default Account;
