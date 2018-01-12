@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const LovedOne = ({ label }) => {
+const LovedOnesListItem = ({ label }) => {
   const { containerStyle, textStyle } = styles;
 
   return (
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default LovedOne;
+export default LovedOnesListItem;
