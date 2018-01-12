@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
-import LovedOne from './LovedOne';
+import LovedOnesListItem from './LovedOnesListItem';
 import { changeLovedOnes } from '../../actions';
 
 class LovedOnesList extends React.Component {
@@ -36,7 +36,7 @@ class LovedOnesList extends React.Component {
   keyExtractor = item => item.id;
 
   renderItem = ({ item }) => (
-    <LovedOne label={item.data().email} />
+    <LovedOnesListItem label={item.data().email} />
   )
 
   render() {

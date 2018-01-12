@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Request = ({ label, onPress, disabled, children }) => {
+const ReceivedRequestsListItem = ({ label, onAccept, onDecline }) => {
   const { containerStyle, textStyle, buttonStyle, buttonTextStyle } = styles;
 
   return (
@@ -11,12 +11,20 @@ const Request = ({ label, onPress, disabled, children }) => {
       </Text>
 
       <TouchableOpacity
-        onPress={onPress}
+        onPress={onAccept}
         style={buttonStyle}
-        disabled={disabled}
       >
         <Text style={buttonTextStyle}>
-          {children}
+          Accept
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={onDecline}
+        style={buttonStyle}
+      >
+        <Text style={buttonTextStyle}>
+          Decline
         </Text>
       </TouchableOpacity>
     </View>
@@ -44,4 +52,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export { Request };
+export default ReceivedRequestsListItem;

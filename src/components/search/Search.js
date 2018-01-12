@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Firebase from 'firebase';
 
 import { Input, Button, Spinner, NonRequest } from '../common';
-import SendRequest from '../request/SendRequest';
+import SendRequest from '../requests/SendRequest';
 import { changeSearchText, searchAttempt } from '../../actions';
 
 

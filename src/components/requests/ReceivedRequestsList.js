@@ -3,7 +3,8 @@ import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
 import { changeReceivedRequests, removeReceivedRequest } from '../../actions';
-import { ReceivedRequest } from '../common';
+import ReceivedRequestsListItem from './ReceivedRequestsListItem';
+
 
 class ReceivedRequestsList extends React.Component {
   constructor(props) {
@@ -118,7 +119,7 @@ class ReceivedRequestsList extends React.Component {
   keyExtractor = item => item.id;
 
   renderItem = ({ item }) => (
-    <ReceivedRequest
+    <ReceivedRequestsListItem
       label={item.data().requesterEmail}
       onAccept={() => this.onAccept(item)}
       onDecline={() => this.onDecline(item)}
