@@ -1,3 +1,3 @@
-import App from './src/App';
+import AppLauncher from './src/AppLauncher';
 
-const app = new App();
+const app = new AppLauncher();

@@ -3,7 +3,7 @@ import Firebase from 'firebase';
 import initFirebase from './initialization/firebase';
 import { startAuth, startApp } from './initialization/app';
 
-class App extends React.Component {
+class AppLauncher extends React.Component {
   static launch() {
     Firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -23,11 +23,11 @@ class App extends React.Component {
     initFirebase();
 
     if (process.env.NODE_ENV === 'development') {
-      App.configureDev();
+      AppLauncher.configureDev();
     }
 
-    App.launch();
+    AppLauncher.launch();
   }
 }
 
-export default App;
+export default AppLauncher;
