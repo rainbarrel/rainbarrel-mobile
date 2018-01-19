@@ -14,16 +14,12 @@ class AppLauncher extends React.Component {
     });
   }
 
-  static configureDev() {
-    console.ignoredYellowBox = ['Remote debugger'];
-  }
-
   constructor(props) {
     super(props);
     initFirebase();
 
     if (process.env.NODE_ENV === 'development') {
-      AppLauncher.configureDev();
+      console.ignoredYellowBox = ['Remote debugger'];
     }
 
     AppLauncher.launch();
