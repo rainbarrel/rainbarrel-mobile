@@ -15,6 +15,8 @@ export const LOGOUT_USER_ATTEMPT = 'logout_user_attempt';
 export const LOGOUT_USER_SUCCESS = 'logout_user_success';
 export const LOGOUT_USER_FAILURE = 'logout_user_failure';
 
+export const ADD_USER = 'add_user';
+
 // Search action types:
 export const CHANGE_SEARCH_TEXT = 'change_search_text';
 export const SEARCH_ATTEMPT = 'search_attempt';
