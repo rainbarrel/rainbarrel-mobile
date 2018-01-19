@@ -46,7 +46,8 @@ class SendRequest extends React.Component {
   }
 
   fetchReceivedRequest() {
-    const user = Firebase.auth().currentUser; // LATER: change to props
+    let { user } = this.props;
+    user = user || Firebase.auth().currentUser;
     const { foundUser } = this.props;
 
     const db = Firebase.firestore();
@@ -84,7 +85,8 @@ class SendRequest extends React.Component {
   }
 
   fetchSentRequest() {
-    const user = Firebase.auth().currentUser; // LATER: change to props
+    let { user } = this.props;
+    user = user || Firebase.auth().currentUser;
     const { foundUser } = this.props;
 
     const db = Firebase.firestore();
@@ -114,7 +116,8 @@ class SendRequest extends React.Component {
   }
 
   sendRequest() {
-    const user = Firebase.auth().currentUser; // LATER: change to props
+    let { user } = this.props;
+    user = user || Firebase.auth().currentUser;
     const { foundUser, requestStatus } = this.props;
 
     let request = {
@@ -170,9 +173,10 @@ class SendRequest extends React.Component {
   }
 }
 
-const mapStateToProps = ({ request }) => {
+const mapStateToProps = ({ auth, request }) => {
+  const { user } = auth;
   const { requestStatus } = request;
-  return { requestStatus };
+  return { user, requestStatus };
 };
 
 const mapDispatchToProps = dispatch => ({
