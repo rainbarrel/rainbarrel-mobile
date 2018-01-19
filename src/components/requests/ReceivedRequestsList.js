@@ -56,7 +56,8 @@ class ReceivedRequestsList extends React.Component {
     };
 
     const db = Firebase.firestore();
-    const user = Firebase.auth().currentUser; // LATER: change to props
+    let { user } = this.props;
+    user = user || Firebase.auth().currentUser;
     const myLovedOnesRef = db.collection(`users/${user.uid}/lovedOnes`);
 
     myLovedOnesRef.add(lovedOneDoc)
@@ -69,7 +70,8 @@ class ReceivedRequestsList extends React.Component {
   }
 
   addTheirLovedOne(request) { // Not static yet. may use 'this' in promises
-    const user = Firebase.auth().currentUser; // LATER: change to props
+    let { user } = this.props;
+    user = user || Firebase.auth().currentUser;
 
     const id = user.uid;
     const email = user.email;
@@ -95,7 +97,8 @@ class ReceivedRequestsList extends React.Component {
   }
 
   fetchPendingRequests() {
-    const user = Firebase.auth().currentUser; // LATER: change to props
+    let { user } = this.props;
+    user = user || Firebase.auth().currentUser;
 
     const db = Firebase.firestore();
     const requestsRef = db.collection('requests');
@@ -139,9 +142,10 @@ class ReceivedRequestsList extends React.Component {
   }
 }
 
-const mapStateToProps = ({ request }) => {
+const mapStateToProps = ({ auth, request }) => {
+  const { user } = auth;
   const { receivedRequests } = request;
-  return { receivedRequests };
+  return { user, receivedRequests };
 };
 
 const mapDispatchToProps = dispatch => ({

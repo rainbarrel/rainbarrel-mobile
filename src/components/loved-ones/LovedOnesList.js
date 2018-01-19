@@ -17,7 +17,8 @@ class LovedOnesList extends React.Component {
   }
 
   fetchLovedOnes() {
-    const user = Firebase.auth().currentUser; // LATER: change to props
+    let { user } = this.props;
+    user = user || Firebase.auth().currentUser;
 
     const db = Firebase.firestore();
     const lovedOnesRef = db.collection(`users/${user.uid}/lovedOnes`);
@@ -52,9 +53,10 @@ class LovedOnesList extends React.Component {
   }
 }
 
-const mapStateToProps = ({ lovedOne }) => {
+const mapStateToProps = ({ auth, lovedOne }) => {
+  const { user } = auth;
   const { lovedOnes } = lovedOne;
-  return { lovedOnes };
+  return { user, lovedOnes };
 };
 
 const mapDispatchToProps = dispatch => ({

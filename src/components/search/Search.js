@@ -19,7 +19,8 @@ class Search extends React.Component {
   }
 
   isValidRequest() {
-    const user = Firebase.auth().currentUser; // LATER: change to props
+    let { user } = this.props;
+    user = user || Firebase.auth().currentUser;
     const { foundUser } = this.props;
     return (user && user.uid !== foundUser.id);
   }
@@ -68,7 +69,8 @@ class Search extends React.Component {
         );
       }
 
-      const user = Firebase.auth().currentUser; // LATER: change to props
+      let { user } = this.props;
+      user = user || Firebase.auth().currentUser;
       const label = user.email;
 
       return (
