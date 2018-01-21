@@ -28,7 +28,7 @@ class Raindrop extends React.Component {
     <Image
       style={{
         width: 300,
-        height: 100
+        height: 300
       }}
       source={{ uri: item.node.image.uri }}
     />
