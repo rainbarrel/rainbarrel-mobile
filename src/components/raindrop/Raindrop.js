@@ -1,51 +1,35 @@
 import React from 'react';
-import { View, FlatList, Image, CameraRoll } from 'react-native';
+import { View, Image, ImagePickerIOS } from 'react-native';
 import { Button } from '../common';
 
 
 class Raindrop extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { photos: [] };
+    this.state = { imageUri: null };
     this.handleButtonPress = this.handleButtonPress.bind(this);
   }
 
   handleButtonPress() {
-    CameraRoll.getPhotos({
-      first: 3
-    })
-      .then((response) => {
-        this.setState({ photos: response.edges });
-      })
-      .catch(() => {
-        // error. doing nothing OK for now.
-      });
+    ImagePickerIOS.openSelectDialog({}, (imageUri) => {
+      this.setState({ imageUri });
+    }, error => console.error(error));
   }
-
-  keyExtractor = item => item.node.timestamp;
-
-  renderItem = ({ item }) => (
-    <Image
-      style={{
-        width: 300,
-        height: 300
-      }}
-      source={{ uri: item.node.image.uri }}
-    />
-  );
 
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Button onPress={this.handleButtonPress}>
-          Load Images
+          Pick Photo
         </Button>
 
-        <FlatList
-          data={this.state.photos}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-        />
+        {this.state.imageUri ?
+          <Image
+            style={{ width: 300, height: 300 }}
+            source={{ uri: this.state.imageUri }}
+          /> :
+          null
+        }
       </View>
     );
   }
