@@ -8,8 +8,6 @@ import { changeLovedOnes } from '../../actions';
 class LovedOnesList extends React.Component {
   constructor(props) {
     super(props);
-    this.renderItem = this.renderItem.bind(this);
-    this.keyExtractor = this.keyExtractor.bind(this);
     this.fetchLovedOnes = this.fetchLovedOnes.bind(this);
   }
 

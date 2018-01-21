@@ -8,8 +8,6 @@ class Raindrop extends React.Component {
     super(props);
     this.state = { photos: [] };
     this.handleButtonPress = this.handleButtonPress.bind(this);
-    this.renderItem = this.renderItem.bind(this);
-    this.keyExtractor = this.keyExtractor.bind(this);
   }
 
   handleButtonPress() {
@@ -34,7 +32,7 @@ class Raindrop extends React.Component {
       }}
       source={{ uri: item.node.image.uri }}
     />
-  )
+  );
 
   render() {
     return (

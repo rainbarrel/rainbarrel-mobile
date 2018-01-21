@@ -7,11 +7,12 @@ import { changeRequestStatus } from '../../actions';
 class SendRequest extends React.Component {
   constructor(props) {
     super(props);
+    this.requestDocRef = null;
+
     this.getRequestDetails = this.getRequestDetails.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
     this.fetchReceivedRequest = this.fetchReceivedRequest.bind(this);
     this.fetchSentRequest = this.fetchSentRequest.bind(this);
-    this.requestDocRef = null;
   }
 
   componentDidMount() {

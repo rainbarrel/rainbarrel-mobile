@@ -10,7 +10,6 @@ class ReceivedRequestsList extends React.Component {
   constructor(props) {
     super(props);
     this.renderItem = this.renderItem.bind(this);
-    this.keyExtractor = this.keyExtractor.bind(this);
     this.fetchPendingRequests = this.fetchPendingRequests.bind(this);
     this.onAccept = this.onAccept.bind(this);
     this.onDecline = this.onDecline.bind(this);
