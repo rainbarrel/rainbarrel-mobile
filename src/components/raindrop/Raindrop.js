@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Image, ImagePickerIOS } from 'react-native';
+import { View, ImagePickerIOS } from 'react-native';
 import { Button } from '../common';
+import RaindropImageAndSearch from './RaindropImageAndSearch';
 
 
 class Raindrop extends React.Component {
@@ -13,7 +14,7 @@ class Raindrop extends React.Component {
   handleButtonPress() {
     ImagePickerIOS.openSelectDialog({}, (imageUri) => {
       this.setState({ imageUri });
-    }, error => console.error(error));
+    }, error => console.log(error));
   }
 
   render() {
@@ -24,9 +25,8 @@ class Raindrop extends React.Component {
         </Button>
 
         {this.state.imageUri ?
-          <Image
-            style={{ width: 300, height: 300 }}
-            source={{ uri: this.state.imageUri }}
+          <RaindropImageAndSearch
+            imageUri={this.state.imageUri}
           /> :
           null
         }

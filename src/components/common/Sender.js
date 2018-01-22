@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Request = ({ label, onPress, disabled, children }) => {
+const Sender = ({ label, onPress, disabled, children }) => {
   const { containerStyle, textStyle, buttonStyle, buttonTextStyle } = styles;
 
   return (
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Request;
+export { Sender };
