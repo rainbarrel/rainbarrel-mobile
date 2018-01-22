@@ -20,6 +20,10 @@ class SendRequest extends React.Component {
     this.fetchReceivedRequest();
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !!(nextProps.user);
+  }
+
   getRequestDetails() {
     const { foundUser, requestStatus } = this.props;
     const label = foundUser.email;

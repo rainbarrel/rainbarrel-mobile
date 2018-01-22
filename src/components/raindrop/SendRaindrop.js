@@ -12,6 +12,10 @@ class SendRaindrop extends React.Component {
     this.sendRaindrop = this.sendRaindrop.bind(this);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !!(nextProps.user);
+  }
+
   sendRaindrop() {
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;

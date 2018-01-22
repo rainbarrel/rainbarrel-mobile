@@ -17,6 +17,10 @@ class RaindropSearch extends React.Component {
     this.renderSendRaindrop = this.renderSendRaindrop.bind(this);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !!(nextProps.user);
+  }
+
   handleButtonPress() {
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;

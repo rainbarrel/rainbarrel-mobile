@@ -15,6 +15,10 @@ class LovedOnesList extends React.Component {
     this.fetchLovedOnes();
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !!(nextProps.user);
+  }
+
   fetchLovedOnes() {
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;

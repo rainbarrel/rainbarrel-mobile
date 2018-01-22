@@ -21,6 +21,10 @@ class ReceivedRequestsList extends React.Component {
     this.fetchPendingRequests();
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !!(nextProps.user);
+  }
+
   onAccept(request) {
     const date = new Date();
 

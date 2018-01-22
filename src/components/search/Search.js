@@ -18,6 +18,10 @@ class Search extends React.Component {
     this.isValidRequest = this.isValidRequest.bind(this);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !!(nextProps.user);
+  }
+
   isValidRequest() {
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;
