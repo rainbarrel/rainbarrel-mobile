@@ -31,6 +31,7 @@ class SendRaindrop extends React.Component {
       const Blob = RNFetchBlob.polyfill.Blob;
       window.Blob = Blob;
       window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+
       const mime = 'image/jpeg';
 
       RNFetchBlob.fs.readFile(imageUri, 'base64')
@@ -41,7 +42,7 @@ class SendRaindrop extends React.Component {
                 .then(() => {
                   imageRef.getDownloadURL()
                     .then((downloadURL) => {
-                      // console.log(downloadURL);
+                      // save to Cloud Firestore
                     });
                 });
             });
