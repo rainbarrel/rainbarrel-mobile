@@ -24,9 +24,9 @@ export const searchAttempt = text => (
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
-          const userDoc = querySnapshot.docs[0];
-          const { id } = userDoc;
-          const email = userDoc.data().email;
+          const foundUserDoc = querySnapshot.docs[0];
+          const { id } = foundUserDoc;
+          const email = foundUserDoc.data().email;
           const user = { id, email };
 
           searchSuccess(dispatch, user);

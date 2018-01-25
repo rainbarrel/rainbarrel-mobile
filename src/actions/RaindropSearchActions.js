@@ -24,9 +24,9 @@ export const raindropSearchAttempt = (user, text) => (
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
-          const userDoc = querySnapshot.docs[0];
-          const { id } = userDoc;
-          const email = userDoc.data().email;
+          const lovedOneDoc = querySnapshot.docs[0];
+          const id = lovedOneDoc.data().lovedOneId;
+          const email = lovedOneDoc.data().email;
           const raindropRecipient = { id, email };
 
           raindropSearchSuccess(dispatch, raindropRecipient);

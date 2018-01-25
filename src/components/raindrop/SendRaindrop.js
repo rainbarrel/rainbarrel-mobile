@@ -2,6 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
+import 'firebase/firestore';
 import UUIDGenerator from 'react-native-uuid-generator';
 import RNFetchBlob from 'react-native-fetch-blob';
 
@@ -46,6 +47,29 @@ class SendRaindrop extends React.Component {
         // handle the error with the upload
       }, () => {
         const downloadURL = uploadTask.snapshot.downloadURL;
+        const db = Firebase.firestore();
+        const raindropsRef = db.collection(`users/${foundRaindropRecipient.id}/raindrops`);
+
+        const senderId = user.uid;
+        const seenAt = null;
+        const createdAt = new Date();
+
+        const raindropDoc = {
+          senderId,
+          downloadURL,
+          seenAt,
+          createdAt
+        };
+
+        raindropsRef.add(raindropDoc)
+          .then(() => {
+            console.log('success');
+            // success. doing nothing OK for now.
+          })
+          .catch((error) => {
+            console.log(error);
+            // error. doing nothing OK for now.
+          });
       });
     } catch (error) {
       console.log(error);
