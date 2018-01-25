@@ -49,12 +49,12 @@ class ReceivedRequestsList extends React.Component {
   }
 
   addMyLovedOne(request) { // Not static yet. may use 'this' in promises
-    const id = request.data().requesterId;
+    const userId = request.data().requesterId;
     const email = request.data().requesterEmail;
     const date = new Date();
 
     const lovedOneDoc = {
-      id,
+      userId,
       email,
       createdAt: date
     };
@@ -77,12 +77,12 @@ class ReceivedRequestsList extends React.Component {
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;
 
-    const id = user.uid;
+    const userId = user.uid;
     const email = user.email;
     const date = new Date();
 
     const lovedOneDoc = {
-      id,
+      userId,
       email,
       createdAt: date
     };
