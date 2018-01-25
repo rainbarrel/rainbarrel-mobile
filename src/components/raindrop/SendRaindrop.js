@@ -19,35 +19,37 @@ class SendRaindrop extends React.Component {
     return !!(nextProps.user);
   }
 
-  sendRaindrop() {
+  async sendRaindrop() {
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;
     const { imageUri, foundRaindropRecipient } = this.props;
 
-    UUIDGenerator.getRandomUUID().then((uuid) => {
-      const imageUUID = uuid;
-      const imageRef = Firebase.storage().ref(`images/${imageUUID}`);
+    const imageUUID = await UUIDGenerator.getRandomUUID();
+    const imageRef = Firebase.storage().ref(`images/${imageUUID}`);
 
-      const Blob = RNFetchBlob.polyfill.Blob;
-      window.Blob = Blob;
-      window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+    const Blob = RNFetchBlob.polyfill.Blob;
+    window.Blob = Blob;
+    window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
 
-      const mime = 'image/jpeg';
+    const mime = 'image/jpeg';
 
-      RNFetchBlob.fs.readFile(imageUri, 'base64')
-        .then((data) => {
-          Blob.build(data, { type: `${mime};BASE64` })
-            .then((blob) => {
-              imageRef.put(blob, { contentType: mime })
-                .then(() => {
-                  imageRef.getDownloadURL()
-                    .then((downloadURL) => {
-                      // save to Cloud Firestore
-                    });
-                });
-            });
-        });
-    });
+    try {
+      const data = await RNFetchBlob.fs.readFile(imageUri, 'base64');
+      const blob = await Blob.build(data, { type: `${mime};BASE64` });
+
+      const metaData = { contentType: mime };
+      const uploadTask = imageRef.put(blob, metaData);
+
+      uploadTask.on('state_changed', (snapshot) => {
+        // modify upload progress information with 'snapshot'
+      }, (error) => {
+        // handle the error with the upload
+      }, () => {
+        const downloadURL = uploadTask.snapshot.downloadURL;
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   render() {
