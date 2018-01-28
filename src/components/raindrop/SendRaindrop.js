@@ -51,8 +51,8 @@ class SendRaindrop extends React.Component {
         const raindropsRef = db.ref(`users/${foundRaindropRecipient.id}/${imageUUID}`);
 
         const senderId = user.uid;
-        const seenAt = null;
-        const createdAt = new Date();
+        const seenAt = '';
+        const createdAt = (new Date()).toString();
 
         const raindropDoc = {
           senderId,
@@ -60,10 +60,9 @@ class SendRaindrop extends React.Component {
           seenAt,
           createdAt
         };
-
+        console.log(raindropDoc);
         raindropsRef.set(raindropDoc)
           .then(() => {
-            console.log('success');
             // success. doing nothing OK for now.
           })
           .catch((error) => {
