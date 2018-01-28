@@ -8,12 +8,15 @@ import { changeLovedOnes } from '../../actions';
 class LovedOnesList extends React.Component {
   constructor(props) {
     super(props);
-    this.renderItem = this.renderItem.bind(this);
     this.fetchLovedOnes = this.fetchLovedOnes.bind(this);
   }
 
   componentDidMount() { // LATER: setup a listener to new loved one requests
     this.fetchLovedOnes();
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !!(nextProps.user);
   }
 
   fetchLovedOnes() {
@@ -38,7 +41,7 @@ class LovedOnesList extends React.Component {
 
   renderItem = ({ item }) => (
     <LovedOnesListItem label={item.data().email} />
-  )
+  );
 
   render() {
     const { lovedOnes } = this.props;

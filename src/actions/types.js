@@ -30,3 +30,12 @@ export const REMOVE_RECEIVED_REQUEST = 'remove_received_request';
 
 // LovedOne action types:
 export const CHANGE_LOVED_ONES = 'change_loved_ones';
+
+// Raindrop Search action types:
+export const CHANGE_RAINDROP_SEARCH_TEXT = 'change_raindrop_search_text';
+export const RAINDROP_SEARCH_ATTEMPT = 'raindrop_search_attempt';
+export const RAINDROP_SEARCH_SUCCESS = 'raindrop_search_success';
+export const RAINDROP_SEARCH_FAILURE = 'raindrop_search_failure';
+
+// Send Raindrop action types:
+export const CHANGE_SEND_RAINDROP_STATUS = 'change_send_raindrop_status';

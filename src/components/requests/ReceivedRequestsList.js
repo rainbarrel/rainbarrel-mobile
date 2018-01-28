@@ -21,6 +21,10 @@ class ReceivedRequestsList extends React.Component {
     this.fetchPendingRequests();
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !!(nextProps.user);
+  }
+
   onAccept(request) {
     const date = new Date();
 
@@ -45,12 +49,12 @@ class ReceivedRequestsList extends React.Component {
   }
 
   addMyLovedOne(request) { // Not static yet. may use 'this' in promises
-    const id = request.data().requesterId;
+    const lovedOneId = request.data().requesterId;
     const email = request.data().requesterEmail;
     const date = new Date();
 
     const lovedOneDoc = {
-      id,
+      lovedOneId,
       email,
       createdAt: date
     };
@@ -73,12 +77,12 @@ class ReceivedRequestsList extends React.Component {
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;
 
-    const id = user.uid;
+    const lovedOneId = user.uid;
     const email = user.email;
     const date = new Date();
 
     const lovedOneDoc = {
-      id,
+      lovedOneId,
       email,
       createdAt: date
     };
@@ -127,7 +131,7 @@ class ReceivedRequestsList extends React.Component {
       onAccept={() => this.onAccept(item)}
       onDecline={() => this.onDecline(item)}
     />
-  )
+  );
 
   render() {
     const { receivedRequests } = this.props;

@@ -4,34 +4,29 @@ import { connect } from 'react-redux';
 import Firebase from 'firebase';
 
 import { Input, Button, Spinner, FoundMe } from '../common';
-import SendRequest from '../requests/SendRequest';
-import { changeSearchText, searchAttempt } from '../../actions';
+import SendRaindrop from './SendRaindrop';
+import { changeRaindropSearchText, raindropSearchAttempt } from '../../actions';
 
 
-class Search extends React.Component {
+class RaindropSearch extends React.Component {
   constructor(props) {
     super(props);
     this.renderButton = this.renderButton.bind(this);
     this.handleButtonPress = this.handleButtonPress.bind(this);
     this.renderError = this.renderError.bind(this);
-    this.renderRequest = this.renderRequest.bind(this);
-    this.isValidRequest = this.isValidRequest.bind(this);
+    this.renderSendRaindrop = this.renderSendRaindrop.bind(this);
   }
 
   shouldComponentUpdate(nextProps) {
     return !!(nextProps.user);
   }
 
-  isValidRequest() {
+  handleButtonPress() {
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;
-    const { foundUser } = this.props;
-    return (user && user.uid !== foundUser.id);
-  }
+    const { raindropSearchText } = this.props;
 
-  handleButtonPress() {
-    const { searchText } = this.props;
-    this.props.searchAttempt(searchText);
+    this.props.raindropSearchAttempt(user, raindropSearchText);
   }
 
   renderButton() {
@@ -43,7 +38,7 @@ class Search extends React.Component {
 
     return (
       <Button onPress={this.handleButtonPress}>
-        Search
+        Search for Raindrop Recipient
       </Button>
     );
   }
@@ -63,22 +58,15 @@ class Search extends React.Component {
     return null;
   }
 
-  renderRequest() {
-    const { foundUser } = this.props;
+  renderSendRaindrop() {
+    const { foundRaindropRecipient } = this.props;
 
-    if (foundUser) {
-      if (this.isValidRequest()) {
-        return (
-          <SendRequest foundUser={foundUser} />
-        );
-      }
-
-      let { user } = this.props;
-      user = user || Firebase.auth().currentUser;
-      const label = user.email;
-
+    if (foundRaindropRecipient) {
       return (
-        <FoundMe label={label} />
+        <SendRaindrop
+          imageUri={this.props.imageUri}
+          foundRaindropRecipient={foundRaindropRecipient}
+        />
       );
     }
 
@@ -89,16 +77,16 @@ class Search extends React.Component {
     return (
       <View>
         <Input
-          label="Search For Loved One"
+          label="Search For Raindrop Recipient"
           placeholder="email@email.com"
-          value={this.props.searchText}
-          onChangeText={text => this.props.changeSearchText(text)}
+          value={this.props.raindropSearchText}
+          onChangeText={text => this.props.changeRaindropSearchText(text)}
           autofocus
         />
 
         {this.renderError()}
         {this.renderButton()}
-        {this.renderRequest()}
+        {this.renderSendRaindrop()}
       </View>
     );
   }
@@ -112,15 +100,17 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, search }) => {
+const mapStateToProps = ({ auth, raindropSearch }) => {
   const { user } = auth;
-  const { searchText, loading, error, foundUser } = search;
-  return { user, searchText, loading, error, foundUser };
+  const { raindropSearchText, loading, error, foundRaindropRecipient } = raindropSearch;
+  return { user, raindropSearchText, loading, error, foundRaindropRecipient };
 };
 
 const mapDispatchToProps = dispatch => ({
-  changeSearchText: text => dispatch(changeSearchText(text)),
-  searchAttempt: text => dispatch(searchAttempt(text))
+  changeRaindropSearchText: text => dispatch(changeRaindropSearchText(text)),
+  raindropSearchAttempt: (user, text) => {
+    dispatch(raindropSearchAttempt(user, text));
+  }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default connect(mapStateToProps, mapDispatchToProps)(RaindropSearch);

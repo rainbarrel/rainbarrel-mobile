@@ -24,6 +24,7 @@ const Input = (props) => {
         secureTextEntry={secureTextEntry}
         autoCorrect={false}
         onSubmitEditing={Keyboard.dismiss}
+        autoCapitalize={'none'}
       />
     </View>
   );
