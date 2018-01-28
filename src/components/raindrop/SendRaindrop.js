@@ -6,7 +6,7 @@ import 'firebase/firestore';
 import UUIDGenerator from 'react-native-uuid-generator';
 import RNFetchBlob from 'react-native-fetch-blob';
 
-import Sender from '../common';
+import { Sender } from '../common';
 import { changeSendRaindropStatus } from '../../actions';
 
 
@@ -40,12 +40,15 @@ class SendRaindrop extends React.Component {
 
       const metaData = { contentType: mime };
       const uploadTask = imageRef.put(blob, metaData);
+      this.props.changeSendRaindropStatus('sending');
 
       uploadTask.on('state_changed', (snapshot) => {
         // modify upload progress information with 'snapshot'
       }, (error) => {
         // handle the error with the upload
       }, () => {
+        this.props.changeSendRaindropStatus('sent');
+
         const downloadURL = uploadTask.snapshot.downloadURL;
         const db = Firebase.database();
         const raindropsRef = db.ref(`users/${foundRaindropRecipient.id}/${imageUUID}`);
@@ -60,7 +63,7 @@ class SendRaindrop extends React.Component {
           seenAt,
           createdAt
         };
-        console.log(raindropDoc);
+
         raindropsRef.set(raindropDoc)
           .then(() => {
             // success. doing nothing OK for now.
@@ -76,12 +79,32 @@ class SendRaindrop extends React.Component {
   }
 
   render() {
-    this.sendRaindrop();
+    const { foundRaindropRecipient, sendRaindropStatus } = this.props;
+
+    let sendRaindropText;
+    let disabled;
+    switch (sendRaindropStatus) {
+      case 'sending':
+        sendRaindropText = 'Sending...';
+        disabled = true;
+        break;
+      case 'sent':
+        sendRaindropText = 'Sent!';
+        disabled = true;
+        break;
+      default:
+        sendRaindropText = 'Send Raindrop';
+        disabled = false;
+    }
 
     return (
-      <Text>
-        Hello from SendRaindrop
-      </Text>
+      <Sender
+        label={foundRaindropRecipient.email}
+        onPress={this.sendRaindrop}
+        disabled={disabled}
+      >
+        {sendRaindropText}
+      </Sender>
     );
   }
 }
