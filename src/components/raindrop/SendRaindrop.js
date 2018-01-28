@@ -47,8 +47,8 @@ class SendRaindrop extends React.Component {
         // handle the error with the upload
       }, () => {
         const downloadURL = uploadTask.snapshot.downloadURL;
-        const db = Firebase.firestore();
-        const raindropsRef = db.collection(`users/${foundRaindropRecipient.id}/raindrops`);
+        const db = Firebase.database();
+        const raindropsRef = db.ref(`users/${foundRaindropRecipient.id}/${imageUUID}`);
 
         const senderId = user.uid;
         const seenAt = null;
@@ -61,7 +61,7 @@ class SendRaindrop extends React.Component {
           createdAt
         };
 
-        raindropsRef.add(raindropDoc)
+        raindropsRef.set(raindropDoc)
           .then(() => {
             console.log('success');
             // success. doing nothing OK for now.
