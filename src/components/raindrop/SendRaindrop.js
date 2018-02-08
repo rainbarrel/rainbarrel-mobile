@@ -1,5 +1,4 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import Firebase from 'firebase';
 import 'firebase/firestore';
@@ -30,6 +29,7 @@ class SendRaindrop extends React.Component {
 
     const Blob = RNFetchBlob.polyfill.Blob;
     window.Blob = Blob;
+    const tempWindowXMLHttpRequest = window.XMLHttpRequest;
     window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
 
     const mime = 'image/jpeg';
@@ -50,12 +50,13 @@ class SendRaindrop extends React.Component {
         this.props.changeSendRaindropStatus('sent');
 
         const downloadURL = uploadTask.snapshot.downloadURL;
-        const db = Firebase.database();
-        const raindropsRef = db.ref(`users/${foundRaindropRecipient.id}/${imageUUID}`);
+
+        const db = Firebase.firestore();
+        const raindropsRef = db.collection(`users/${foundRaindropRecipient.id}/raindrops`);
 
         const senderId = user.uid;
-        const seenAt = '';
-        const createdAt = (new Date()).toString();
+        const seenAt = null;
+        const createdAt = new Date();
 
         const raindropDoc = {
           senderId,
@@ -64,7 +65,9 @@ class SendRaindrop extends React.Component {
           createdAt
         };
 
-        raindropsRef.set(raindropDoc)
+        window.XMLHttpRequest = tempWindowXMLHttpRequest;
+
+        raindropsRef.add(raindropDoc)
           .then(() => {
             // success. doing nothing OK for now.
           })
