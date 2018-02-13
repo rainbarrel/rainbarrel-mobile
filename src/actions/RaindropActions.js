@@ -4,7 +4,8 @@ import {
   CHANGE_RAINDROP_SEARCH_TEXT,
   RAINDROP_SEARCH_ATTEMPT,
   RAINDROP_SEARCH_SUCCESS,
-  RAINDROP_SEARCH_FAILURE
+  RAINDROP_SEARCH_FAILURE,
+  CHANGE_SEND_RAINDROP_STATUS
 } from './types';
 
 export const changeRaindropSearchText = text => ({
@@ -50,3 +51,8 @@ export const raindropSearchSuccess = (dispatch, raindropRecipient) => {
 export const raindropSearchFailure = (dispatch) => {
   dispatch({ type: RAINDROP_SEARCH_FAILURE });
 };
+
+export const changeSendRaindropStatus = status => ({
+  type: CHANGE_SEND_RAINDROP_STATUS,
+  payload: status
+});

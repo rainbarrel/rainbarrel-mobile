@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, raindropSearch }) => {
+const mapStateToProps = ({ auth, raindrop }) => {
   const { user } = auth;
-  const { raindropSearchText, loading, error, foundRaindropRecipient } = raindropSearch;
+  const { raindropSearchText, loading, error, foundRaindropRecipient } = raindrop;
   return { user, raindropSearchText, loading, error, foundRaindropRecipient };
 };
 
