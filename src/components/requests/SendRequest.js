@@ -14,6 +14,8 @@ class SendRequest extends React.Component {
     this.sendRequest = this.sendRequest.bind(this);
     this.fetchReceivedRequest = this.fetchReceivedRequest.bind(this);
     this.fetchSentRequest = this.fetchSentRequest.bind(this);
+
+    this.db = Firebase.firestore();
   }
 
   componentDidMount() {
@@ -56,8 +58,7 @@ class SendRequest extends React.Component {
     user = user || Firebase.auth().currentUser;
     const { foundUser } = this.props;
 
-    const db = Firebase.firestore();
-    const requestsRef = db.collection('requests');
+    const requestsRef = this.db.collection('requests');
     const requestQuery = requestsRef.where(
       'requesteeId', '==', user.uid
     ).where(
@@ -95,8 +96,7 @@ class SendRequest extends React.Component {
     user = user || Firebase.auth().currentUser;
     const { foundUser } = this.props;
 
-    const db = Firebase.firestore();
-    const requestsRef = db.collection('requests');
+    const requestsRef = this.db.collection('requests');
     const requestQuery = requestsRef.where(
       'requesterId', '==', user.uid
     ).where(
@@ -146,8 +146,7 @@ class SendRequest extends React.Component {
           // error. doing nothing OK for now.
         });
     } else {
-      const db = Firebase.firestore();
-      const requestsRef = db.collection('requests');
+      const requestsRef = this.db.collection('requests');
 
       const date = new Date();
       request = { ...request, createdAt: date, updatedAt: date };

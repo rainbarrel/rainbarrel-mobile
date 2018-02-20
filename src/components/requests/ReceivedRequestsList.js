@@ -15,6 +15,8 @@ class ReceivedRequestsList extends React.Component {
     this.onDecline = this.onDecline.bind(this);
     this.addMyLovedOne = this.addMyLovedOne.bind(this);
     this.addTheirLovedOne = this.addTheirLovedOne.bind(this);
+
+    this.db = Firebase.firestore();
   }
 
   componentDidMount() { // LATER: setup a listener to new loved one requests
@@ -59,10 +61,9 @@ class ReceivedRequestsList extends React.Component {
       createdAt: date
     };
 
-    const db = Firebase.firestore();
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;
-    const myLovedOnesRef = db.collection(`users/${user.uid}/lovedOnes`);
+    const myLovedOnesRef = this.db.collection(`users/${user.uid}/lovedOnes`);
 
     myLovedOnesRef.add(lovedOneDoc)
       .then(() => {
@@ -87,9 +88,8 @@ class ReceivedRequestsList extends React.Component {
       createdAt: date
     };
 
-    const db = Firebase.firestore();
     const requesterId = request.data().requesterId;
-    const theirLovedOnesRef = db.collection(`users/${requesterId}/lovedOnes`);
+    const theirLovedOnesRef = this.db.collection(`users/${requesterId}/lovedOnes`);
 
     theirLovedOnesRef.add(lovedOneDoc)
       .then(() => {
@@ -104,8 +104,7 @@ class ReceivedRequestsList extends React.Component {
     let { user } = this.props;
     user = user || Firebase.auth().currentUser;
 
-    const db = Firebase.firestore();
-    const requestsRef = db.collection('requests');
+    const requestsRef = this.db.collection('requests');
     const requestsQuery = requestsRef.where(
       'requesteeId', '==', user.uid
     ).where(
