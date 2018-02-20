@@ -9,7 +9,8 @@ const Input = (props) => {
     value,
     onChangeText,
     autofocus,
-    secureTextEntry
+    secureTextEntry,
+    editable
   } = props;
 
   return (
@@ -25,6 +26,7 @@ const Input = (props) => {
         autoCorrect={false}
         onSubmitEditing={Keyboard.dismiss}
         autoCapitalize={'none'}
+        editable={editable}
       />
     </View>
   );

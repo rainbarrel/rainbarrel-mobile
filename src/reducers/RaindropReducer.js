@@ -19,8 +19,7 @@ export default (state = INITIAL_STATE, action) => {
     case CHANGE_RAINDROP_SEARCH_TEXT:
       return {
         ...INITIAL_STATE,
-        raindropSearchText: action.payload,
-        foundRaindropRecipient: state.foundRaindropRecipient
+        raindropSearchText: action.payload
       };
     case RAINDROP_SEARCH_ATTEMPT:
       return { ...INITIAL_STATE, loading: true };
