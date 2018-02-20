@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ImagePickerIOS } from 'react-native';
+import { connect } from 'react-redux';
 import { Button } from '../common';
 import RaindropImageAndSearch from './RaindropImageAndSearch';
 
@@ -18,9 +19,11 @@ class Raindrop extends React.Component {
   }
 
   render() {
+    const disabled = (this.props.sendRaindropStatus === 'sending');
+
     return (
       <View style={{ flex: 1 }}>
-        <Button onPress={this.handleButtonPress}>
+        <Button onPress={this.handleButtonPress} disabled={disabled}>
           Pick Photo
         </Button>
 
@@ -35,4 +38,9 @@ class Raindrop extends React.Component {
   }
 }
 
-export default Raindrop;
+const mapStateToProps = ({ raindrop }) => {
+  const { sendRaindropStatus } = raindrop;
+  return { sendRaindropStatus };
+};
+
+export default connect(mapStateToProps)(Raindrop);

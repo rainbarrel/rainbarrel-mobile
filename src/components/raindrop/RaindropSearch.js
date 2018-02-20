@@ -30,14 +30,17 @@ class RaindropSearch extends React.Component {
   }
 
   renderButton() {
-    const { loading } = this.props;
+    const { loading, sendRaindropStatus } = this.props;
 
     if (loading) {
       return <Spinner />;
     }
 
+    const disabled = (sendRaindropStatus === 'sending');
+
     return (
-      <Button onPress={this.handleButtonPress}>
+
+      <Button onPress={this.handleButtonPress} disabled={disabled}>
         Search for Raindrop Recipient
       </Button>
     );
@@ -74,6 +77,8 @@ class RaindropSearch extends React.Component {
   }
 
   render() {
+    const editable = (this.props.sendRaindropStatus !== 'sending');
+
     return (
       <View>
         <Input
@@ -82,6 +87,7 @@ class RaindropSearch extends React.Component {
           value={this.props.raindropSearchText}
           onChangeText={text => this.props.changeRaindropSearchText(text)}
           autofocus
+          editable={editable}
         />
 
         {this.renderError()}
@@ -100,10 +106,17 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, raindropSearch }) => {
+const mapStateToProps = ({ auth, raindrop }) => {
   const { user } = auth;
-  const { raindropSearchText, loading, error, foundRaindropRecipient } = raindropSearch;
-  return { user, raindropSearchText, loading, error, foundRaindropRecipient };
+  const {
+    raindropSearchText,
+    loading,
+    error,
+    foundRaindropRecipient,
+    sendRaindropStatus
+  } = raindrop;
+
+  return { user, raindropSearchText, loading, error, foundRaindropRecipient, sendRaindropStatus };
 };
 
 const mapDispatchToProps = dispatch => ({

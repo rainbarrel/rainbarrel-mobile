@@ -47,8 +47,6 @@ class SendRaindrop extends React.Component {
       }, (error) => {
         // handle the error with the upload
       }, () => {
-        this.props.changeSendRaindropStatus('sent');
-
         const downloadURL = uploadTask.snapshot.downloadURL;
 
         const db = Firebase.firestore();
@@ -69,7 +67,7 @@ class SendRaindrop extends React.Component {
 
         raindropsRef.add(raindropDoc)
           .then(() => {
-            // success. doing nothing OK for now.
+            this.props.changeSendRaindropStatus('sent');
           })
           .catch((error) => {
             console.log(error);
@@ -112,9 +110,9 @@ class SendRaindrop extends React.Component {
   }
 }
 
-const mapStateToProps = ({ auth, sendRaindrop }) => {
+const mapStateToProps = ({ auth, raindrop }) => {
   const { user } = auth;
-  const { sendRaindropStatus } = sendRaindrop;
+  const { sendRaindropStatus } = raindrop;
   return { user, sendRaindropStatus };
 };
 
